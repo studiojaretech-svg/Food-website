@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import ContentManager from '@/components/ContentManager';
 import StarIcon from '@/assets/icons/star.svg';
