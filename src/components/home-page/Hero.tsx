@@ -27,37 +27,41 @@ const HomeHero: React.FC<Props> = ({
     description,
     bcmsConfig,
 }) => {
-    // Beautiful top-down food thumbnail images replacing the emojis
+    // Beautiful top-down food thumbnail images for the menu shortcut cards
     const categoryCards = [
         {
             id: 'bowls',
             title: 'Gourmet Bowls',
             desc: 'Healthy & vibrant',
-            image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=150&h=150&q=80',
-            bg: 'from-emerald-50/50 to-teal-50/20',
-            border: 'hover:border-emerald-200/60',
+            image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=200&h=200&q=80',
+            border: 'hover:border-emerald-200/80',
         },
         {
             id: 'signature',
             title: 'Chef Specials',
             desc: 'Warm artisanal plates',
-            image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=150&h=150&q=80',
-            bg: 'from-orange-50/50 to-amber-50/20',
-            border: 'hover:border-orange-200/60',
+            image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=200&h=200&q=80',
+            border: 'hover:border-orange-200/80',
         },
         {
             id: 'sides',
             title: 'Sides & Snacks',
             desc: 'Crisp & fresh treats',
-            image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=150&h=150&q=80',
-            bg: 'from-lime-50/50 to-emerald-50/20',
-            border: 'hover:border-lime-200/60',
+            image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=200&h=200&q=80',
+            border: 'hover:border-lime-200/80',
         },
     ];
 
     return (
-        <section className="relative pt-20 pb-12 md:pt-28 md:pb-20 lg:pt-36 lg:pb-28 overflow-hidden bg-gradient-to-br from-[#fafaf9] via-[#f5f5f3] to-[#eaeaea]">
-            {/* Custom ambient keyframes for the organic studio feel */}
+        <section 
+            className="relative pt-20 pb-12 md:pt-28 md:pb-20 lg:pt-36 lg:pb-28 overflow-hidden bg-stone-100"
+            style={{
+                backgroundImage: "url('/hero.jpg')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+            }}
+        >
+            {/* Custom ambient keyframes for the interactive 3D layout depth */}
             <style dangerouslySetInnerHTML={{__html: `
                 @keyframes float-slow {
                     0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -78,9 +82,9 @@ const HomeHero: React.FC<Props> = ({
                     animation: float-reverse 7s ease-in-out infinite;
                 }
                 .animate-spin-slow {
-                    animation: spin-ultra-slow 50s linear infinite;
+                    animation: spin-ultra-slow 65s linear infinite;
                 }
-                /* Hide scrollbar for category row on mobile */
+                /* Hide scrollbar for category row on mobile devices */
                 .scrollbar-none::-webkit-scrollbar {
                     display: none;
                 }
@@ -90,12 +94,12 @@ const HomeHero: React.FC<Props> = ({
                 }
             `}} />
 
-            {/* Ambient Background Vignette Overlay */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,transparent_30%,rgba(255,255,255,0.4)_100%)] pointer-events-none" />
+            {/* Premium Soft White Studio Lighting Overlay to keep copy readable over texture */}
+            <div className="absolute inset-0 bg-white/80 md:bg-white/70 backdrop-blur-[0.5px] pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
-                {/* Upper Meta Info Row: Location & Timing (Extremely compact to save vertical space) */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-8 pb-4 border-b border-gray-200/40">
+                {/* Upper Meta Info Row: Location & Timing */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-8 pb-4 border-b border-gray-900/10">
                     <div className="flex items-center gap-2">
                         <div className="p-1.5 bg-white rounded-full shadow-sm border border-gray-100">
                             <StarIcon className="w-3.5 h-3.5 text-appAccent" />
@@ -113,7 +117,7 @@ const HomeHero: React.FC<Props> = ({
                             <span className="text-xs text-gray-400 uppercase tracking-wider">Hours:</span>
                             <ContentManager
                                 items={open_time.nodes}
-                                className="text-xs text-appText font-medium [&_strong]:text-appAccent"
+                                className="text-xs text-appText font-semibold [&_strong]:text-appAccent"
                             />
                         </div>
                     </div>
@@ -135,10 +139,10 @@ const HomeHero: React.FC<Props> = ({
                             </h1>
                         </div>
 
-                        {/* Beautifully styled description blocks with clean image rendering */}
-                        <div className="space-y-3 max-w-2xl text-sm md:text-base text-gray-600 leading-relaxed font-light">
+                        {/* Elegantly styled description blocks with clean, non-distorted inline images */}
+                        <div className="text-sm md:text-base text-gray-600 leading-relaxed font-light">
                             {description.map((item, index) => (
-                                <React.Fragment key={index}>
+                                <span key={index} className="inline-block mr-1 mb-1">
                                     {item.text && item.text.nodes.length > 0 && (
                                         <ContentManager
                                             items={item.text.nodes}
@@ -146,15 +150,15 @@ const HomeHero: React.FC<Props> = ({
                                         />
                                     )}
                                     {item.image && (
-                                        <span className="inline-block mx-1 align-middle">
+                                        <span className="inline-block mx-1.5 align-middle w-8 h-8 rounded-full overflow-hidden shadow-sm border border-white">
                                             <BCMSImage
                                                 media={item.image}
                                                 clientConfig={bcmsConfig}
-                                                className="rounded-md shadow-sm h-6 w-auto inline-block bg-center bg-cover object-cover"
+                                                className="w-full h-full object-cover"
                                             />
                                         </span>
                                     )}
-                                </React.Fragment>
+                                </span>
                             ))}
                         </div>
 
@@ -163,13 +167,13 @@ const HomeHero: React.FC<Props> = ({
                             <Btn to="/menu" className="uppercase px-6 py-3 bg-appAccent text-white rounded-full text-xs font-bold shadow-md shadow-appAccent/20 hover:scale-[1.02] transition-transform">
                                 <span>Order Now</span>
                             </Btn>
-                            <Btn to="/about-us" className="uppercase px-6 py-3 bg-white text-appText border border-gray-200/60 rounded-full text-xs font-bold hover:bg-gray-50 transition-colors">
+                            <Btn to="/about-us" className="uppercase px-6 py-3 bg-white text-appText border border-gray-200 rounded-full text-xs font-bold hover:bg-gray-50 transition-colors">
                                 <span>Explore Story</span>
                             </Btn>
                         </div>
 
                         {/* Categories Segment with horizontal swipe row on mobile to reduce scroll */}
-                        <div className="pt-6 border-t border-gray-200/40">
+                        <div className="pt-6 border-t border-gray-900/10">
                             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">
                                 Jump straight to menus
                             </p>
@@ -179,16 +183,16 @@ const HomeHero: React.FC<Props> = ({
                                 {categoryCards.map((card) => (
                                     <div
                                         key={card.id}
-                                        className={`group relative flex-shrink-0 w-[240px] sm:w-auto snap-center flex items-center gap-3 p-2.5 bg-white/70 backdrop-blur-sm border border-gray-200/30 rounded-xl cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md hover:bg-white ${card.border}`}
+                                        className={`group relative flex-shrink-0 w-[230px] sm:w-auto snap-center flex items-center gap-3 p-2 bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-xl cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md hover:bg-white ${card.border}`}
                                     >
-                                        <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 shadow-inner bg-gray-50">
+                                        <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 shadow-inner bg-stone-100">
                                             <img
                                                 src={card.image}
                                                 alt={card.title}
                                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                             />
                                         </div>
-                                        <div className="min-w-0 pr-6">
+                                        <div className="min-w-0 pr-4">
                                             <h3 className="text-xs font-bold text-appText leading-tight truncate">
                                                 {card.title}
                                             </h3>
@@ -196,7 +200,7 @@ const HomeHero: React.FC<Props> = ({
                                                 {card.desc}
                                             </p>
                                         </div>
-                                        <div className="absolute right-3.5 text-xs text-gray-300 group-hover:text-appAccent group-hover:translate-x-0.5 transition-all">
+                                        <div className="absolute right-2.5 text-xs text-gray-300 group-hover:text-appAccent group-hover:translate-x-0.5 transition-all">
                                             →
                                         </div>
                                     </div>
@@ -212,23 +216,20 @@ const HomeHero: React.FC<Props> = ({
                         <div className="absolute w-[85%] h-[85%] rounded-full bg-gradient-to-tr from-amber-200/10 via-emerald-200/10 to-transparent blur-3xl pointer-events-none" />
                         
                         {/* 2. Soft-Faceted Platter Ring */}
-                        <div className="absolute w-[80%] h-[80%] rounded-full border border-gray-300/30 bg-white/30 backdrop-blur-[1px] shadow-[inset_0_2px_4px_rgba(255,255,255,0.6)] flex items-center justify-center animate-spin-slow" style={{ animationDuration: '70s' }}>
-                            <div className="w-[96%] h-[96%] rounded-full border border-dashed border-gray-300/40" />
+                        <div className="absolute w-[80%] h-[80%] rounded-full border border-gray-400/10 bg-white/25 backdrop-blur-[1px] shadow-[inset_0_2px_4px_rgba(255,255,255,0.4)] flex items-center justify-center animate-spin-slow">
+                            <div className="w-[96%] h-[96%] rounded-full border border-dashed border-gray-300/30" />
                         </div>
 
                         {/* 3. Primary Top-Down Food Dish Container */}
-                        <div className="relative w-[72%] h-[72%] rounded-full shadow-[0_20px_45px_rgba(0,0,0,0.12)] overflow-hidden border-4 border-white/95 group transition-transform duration-500 hover:scale-[1.02] animate-float-slow">
+                        <div className="relative w-[72%] h-[72%] rounded-full shadow-[0_20px_45px_rgba(0,0,0,0.15)] overflow-hidden border-4 border-white group transition-transform duration-500 hover:scale-[1.02] animate-float-slow">
                             <img
-                                src="/home-cover.jpg"
+                                src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80"
                                 alt="Signature culinary dish top view"
                                 className="w-full h-full object-cover"
-                                onError={(e) => {
-                                    e.currentTarget.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80';
-                                }}
                             />
                         </div>
 
-                        {/* 4. Soft Ambient Leaves (Positioned elegantly to match the reference view overlap) */}
+                        {/* 4. Soft Ambient Leaves */}
                         {/* Upper Right Leaf */}
                         <div className="absolute top-[15%] right-[10%] text-2xl select-none pointer-events-none animate-float-slow" style={{ animationDelay: '1s' }}>
                             🍃
