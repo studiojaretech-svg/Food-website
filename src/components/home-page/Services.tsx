@@ -1,10 +1,36 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Btn from '@/components/Btn';
 
 const HomeServices: React.FC = () => {
-    // Curated steps using our warm earth-tone palette
+    const [isVisible, setIsVisible] = useState(false);
+    const sectionRef = useRef<HTMLDivElement>(null);
+
+    // Setup an intersection observer to trigger scroll-driven entrance animations
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                }
+            },
+            {
+                threshold: 0.12, // Triggers when 12% of the section is visible
+            }
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current);
+            }
+        };
+    }, []);
+
     const servicesSteps = [
         {
             id: 1,
@@ -16,6 +42,7 @@ const HomeServices: React.FC = () => {
                 </svg>
             ),
             isFeatured: false,
+            delayClass: 'delay-[100ms]',
         },
         {
             id: 2,
@@ -26,7 +53,8 @@ const HomeServices: React.FC = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 13l4 4L19 7" />
                 </svg>
             ),
-            isFeatured: true, // This maps to the highlighted red card in your screenshot, styled in our Caramel
+            isFeatured: true, // Caramel highlighted card
+            delayClass: 'delay-[200ms]',
         },
         {
             id: 3,
@@ -38,6 +66,7 @@ const HomeServices: React.FC = () => {
                 </svg>
             ),
             isFeatured: false,
+            delayClass: 'delay-[300ms]',
         },
         {
             id: 4,
@@ -49,19 +78,57 @@ const HomeServices: React.FC = () => {
                 </svg>
             ),
             isFeatured: false,
+            delayClass: 'delay-[400ms]',
         },
     ];
 
     return (
-        <section className="relative py-20 lg:py-32 overflow-hidden bg-[#1C0F03]">
-            {/* Ambient visual background highlights */}
+        <section 
+            ref={sectionRef} 
+            className="relative py-20 lg:py-32 overflow-hidden bg-[#241203]"
+        >
+            {/* Custom slow spin keyframe for the background symbol */}
+            <style dangerouslySetInnerHTML={{__html: `
+                @keyframes spin-infinitely {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                .animate-spin-infinitely {
+                    animation: spin-infinitely 140s linear infinite;
+                }
+            `}} />
+
+            {/* 1. GIANT TRANSPARENT CULINARY BRAND WATERMARK (Big symbol element) */}
+            <div className="absolute top-[10%] left-[-15%] lg:left-[-10%] w-[500px] h-[500px] lg:w-[800px] lg:h-[800px] opacity-[0.025] text-[#FFB03A] pointer-events-none select-none z-0 mix-blend-screen animate-spin-infinitely">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" className="w-full h-full">
+                    {/* Nested outer rings */}
+                    <circle cx="50" cy="50" r="48" strokeWidth="0.25" strokeDasharray="1 1" />
+                    <circle cx="50" cy="50" r="44" strokeWidth="0.1" />
+                    <circle cx="50" cy="50" r="38" strokeWidth="0.15" strokeDasharray="2 1" />
+                    
+                    {/* Symmetric radial geometry lines (representing a giant cook top / nest) */}
+                    <line x1="50" y1="2" x2="50" y2="98" strokeWidth="0.1" />
+                    <line x1="2" y1="50" x2="98" y2="50" strokeWidth="0.1" />
+                    <line x1="16" y1="16" x2="84" y2="84" strokeWidth="0.1" />
+                    <line x1="16" y1="84" x2="84" y2="16" strokeWidth="0.1" />
+                    
+                    {/* Abstract circular pattern elements */}
+                    <circle cx="50" cy="50" r="24" strokeWidth="0.2" />
+                    <circle cx="50" cy="26" r="4" strokeWidth="0.15" />
+                    <circle cx="50" cy="74" r="4" strokeWidth="0.15" />
+                    <circle cx="26" cy="50" r="4" strokeWidth="0.15" />
+                    <circle cx="74" cy="50" r="4" strokeWidth="0.15" />
+                </svg>
+            </div>
+
+            {/* Ambient subtle blurs */}
             <div className="absolute top-[-10%] left-[-10%] w-[45%] h-[45%] rounded-full bg-[#FFB03A]/5 blur-3xl pointer-events-none" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[45%] h-[45%] rounded-full bg-[#AB7743]/5 blur-3xl pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
                     
-                    {/* LEFT SIDE: Asymmetrical Staggered Cards (From Reference Picture) */}
+                    {/* LEFT SIDE: Asymmetrical Staggered Cards with Staggered Scroll Animations */}
                     <div className="lg:col-span-6 grid grid-cols-2 gap-4 md:gap-6 relative">
                         
                         {/* Column 1 (Normal Alignment) */}
@@ -69,7 +136,11 @@ const HomeServices: React.FC = () => {
                             {servicesSteps.filter(step => step.id % 2 !== 0).map((step) => (
                                 <div 
                                     key={step.id} 
-                                    className="p-5 md:p-6 bg-[#4C2B08]/40 border border-[#B7957F]/10 rounded-2xl shadow-lg transition-transform duration-300 hover:scale-[1.02]"
+                                    className={`p-5 md:p-6 bg-[#4C2B08]/40 border border-[#B7957F]/10 rounded-2xl shadow-lg transition-all duration-700 hover:scale-[1.02] transform ${
+                                        isVisible 
+                                            ? 'opacity-100 translate-y-0 filter-none' 
+                                            : 'opacity-0 translate-y-8 blur-sm'
+                                    } ${step.delayClass}`}
                                 >
                                     <div className="w-14 h-14 rounded-xl bg-[#4C2B08]/60 flex items-center justify-center mb-4 border border-[#B7957F]/20">
                                         {step.icon}
@@ -84,12 +155,16 @@ const HomeServices: React.FC = () => {
                             ))}
                         </div>
 
-                        {/* Column 2 (Pushed Lower to create the exact offset stagger from your image) */}
+                        {/* Column 2 (Pushed Lower to create the exact offset stagger, animated on scroll) */}
                         <div className="flex flex-col gap-4 md:gap-6 mt-8 lg:mt-12">
                             {servicesSteps.filter(step => step.id % 2 === 0).map((step) => (
                                 <div 
                                     key={step.id} 
-                                    className={`p-5 md:p-6 rounded-2xl shadow-xl transition-all duration-300 hover:scale-[1.02] ${
+                                    className={`p-5 md:p-6 rounded-2xl shadow-xl transition-all duration-700 hover:scale-[1.02] transform ${
+                                        isVisible 
+                                            ? 'opacity-100 translate-y-0 filter-none' 
+                                            : 'opacity-0 translate-y-8 blur-sm'
+                                    } ${step.delayClass} ${
                                         step.isFeatured 
                                             ? 'bg-gradient-to-br from-[#AB7743] to-[#966535] border-2 border-[#FFB03A]/40 text-neutral-950' 
                                             : 'bg-[#4C2B08]/40 border border-[#B7957F]/10'
@@ -117,8 +192,12 @@ const HomeServices: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* RIGHT SIDE: Rich Editorial Copy & Call to Action (How It Works) */}
-                    <div className="lg:col-span-6 flex flex-col space-y-6 lg:pl-4">
+                    {/* RIGHT SIDE: Rich Editorial Copy & Call to Action with Scroll Animation */}
+                    <div 
+                        className={`lg:col-span-6 flex flex-col space-y-6 lg:pl-4 transition-all duration-1000 transform ${
+                            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
+                        }`}
+                    >
                         <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFB03A]/10 text-[#FFB03A] text-[10px] font-black tracking-widest uppercase max-w-max border border-[#FFB03A]/20">
                             Our Concept
                         </span>
