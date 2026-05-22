@@ -51,6 +51,24 @@ const HomeHero: React.FC<Props> = ({
         },
     ];
 
+    // Helper function to dynamically clean placeholder content from BCMS nodes
+    const replaceTextInNodes = (nodes: any[]): any[] => {
+        if (!nodes) return [];
+        return nodes.map((node) => {
+            const newNode = { ...node };
+            if (typeof newNode.value === 'string') {
+                newNode.value = newNode.value.replace(/welcome to tastyyy/gi, 'Welcome to Cravenest');
+                newNode.value = newNode.value.replace(/tastyyy/gi, 'Cravenest');
+            }
+            if (newNode.nodes && Array.isArray(newNode.nodes)) {
+                newNode.nodes = replaceTextInNodes(newNode.nodes);
+            }
+            return newNode;
+        });
+    };
+
+    const processedOpenTimeNodes = replaceTextInNodes(open_time.nodes);
+
     return (
         <section 
             className="relative pt-20 pb-12 md:pt-28 md:pb-20 lg:pt-36 lg:pb-28 overflow-hidden bg-neutral-950"
@@ -107,20 +125,21 @@ const HomeHero: React.FC<Props> = ({
                 }
                 /* Soft drop shadow applied directly to text for extreme legibility over raw photo backdrops */
                 .text-shadow-premium {
-                    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.85);
+                    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 1px 5px rgba(0, 0, 0, 0.85);
                 }
             `}} />
 
             <div className="container mx-auto px-4 relative z-10">
                 
-                {/* Upper Metadata Row: Location & Hours */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-8 pb-4 border-b border-white/25">
+                {/* Upper Metadata Row: Location & Hours with enlarged text */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-4 border-b border-white/25">
                     <div className="flex items-center gap-2">
                         <div className="p-1.5 bg-amber-500 rounded-full shadow-md">
-                            <StarIcon className="w-3.5 h-3.5 text-neutral-950" />
+                            <StarIcon className="w-4 h-4 text-neutral-950" />
                         </div>
                         <div>
-                            <div className="text-xs font-bold text-[#FFFDF4] tracking-wide text-shadow-premium">
+                            {/* Enlarged Location Text */}
+                            <div className="text-sm md:text-base font-extrabold text-[#FFFDF4] tracking-wide text-shadow-premium">
                                 {address}
                             </div>
                         </div>
@@ -130,11 +149,12 @@ const HomeHero: React.FC<Props> = ({
                         <div className="sm:hidden">
                             <HomePageMap map={map} bcmConfig={bcmsConfig} />
                         </div>
-                        <div className="text-right sm:text-left flex items-center gap-1.5 text-shadow-premium">
-                            <span className="text-xs text-[#FF9130] uppercase tracking-widest font-black">Hours:</span>
+                        {/* Enlarged Hours Text */}
+                        <div className="text-right sm:text-left flex items-center gap-2 text-shadow-premium">
+                            <span className="text-sm text-[#FF9130] uppercase tracking-widest font-black">Hours:</span>
                             <ContentManager
-                                items={open_time.nodes}
-                                className="text-xs text-[#FFFDF4] font-bold [&_strong]:text-[#FF9130]"
+                                items={processedOpenTimeNodes}
+                                className="text-sm md:text-base text-[#FFFDF4] font-extrabold [&_strong]:text-[#FF9130]"
                             />
                         </div>
                     </div>
@@ -151,26 +171,30 @@ const HomeHero: React.FC<Props> = ({
                                 Freshly Sourced Ingredients
                             </span>
                             
-                            {/* Title styled in Vibrant, High-Contrast Saffron Gold */}
+                            {/* Brand Name Title with "Crave" in Gold and "Nest" completely in White */}
                             <h1 
-                                className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-[#FFB03A] leading-[1.05] font-Gloock text-shadow-premium"
-                                data-cms-title={title} // Reads the CMS prop safely to pass TS compiler checks
+                                className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] font-Gloock text-shadow-premium flex flex-wrap items-center"
+                                data-cms-title={title}
                             >
-                                Cravenest
+                                <span className="text-[#FFB03A]">Crave</span>
+                                <span className="text-white">Nest</span>
                             </h1>
                         </div>
 
-                        {/* Clean descriptions styled in premium italic editorial Gloock serif */}
+                        {/* Clean descriptions with "Tastyyy" text replaced, styled in premium italic editorial Gloock serif */}
                         <div className="text-lg md:text-xl text-[#FFFDF4]/95 leading-relaxed font-normal font-Gloock italic tracking-wide max-w-2xl animate-reveal-2 text-shadow-premium">
-                            {description.map((item, index) => (
-                                <span key={index} className="inline mr-1 mb-1">
-                                    {item.text && item.text.nodes.length > 0 && (
-                                        <span className="bg-neutral-950/20 px-1 py-0.5 rounded backdrop-blur-[0.5px]">
-                                            <ContentManager items={item.text.nodes} className="inline" />
-                                        </span>
-                                    )}
-                                </span>
-                            ))}
+                            {description.map((item, index) => {
+                                const processedNodes = replaceTextInNodes(item.text?.nodes || []);
+                                return (
+                                    <span key={index} className="inline mr-1 mb-1">
+                                        {item.text && item.text.nodes.length > 0 && (
+                                            <span className="bg-neutral-950/25 px-1 py-0.5 rounded backdrop-blur-[0.5px]">
+                                                <ContentManager items={processedNodes} className="inline" />
+                                            </span>
+                                        )}
+                                    </span>
+                                );
+                            })}
                         </div>
 
                         {/* Primary & Secondary Action Buttons (Gold & White Premium Pills) */}
@@ -191,7 +215,7 @@ const HomeHero: React.FC<Props> = ({
 
                         {/* Category Shortcut Ribbon (Sleek dark cards with white text) */}
                         <div className="pt-6 border-t border-white/20 animate-reveal-3">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-[#FF9130] mb-3 text-shadow-premium">
+                            <p className="text-[13px] font-black uppercase tracking-widest text-[#FF9130] mb-3 text-shadow-premium">
                                 Jump straight to menus
                             </p>
                             
@@ -231,25 +255,25 @@ const HomeHero: React.FC<Props> = ({
                         {/* Soft Ambient Core Glow behind the entire cluster */}
                         <div className="absolute w-[90%] h-[90%] rounded-full bg-[#FF9130]/5 blur-3xl pointer-events-none" />
                         
-                        {/* Dish 1: Primary Upper (Center-Right / z-20) - Chad Montano's Pizza */}
+                        {/* Dish 1: Primary Upper (Center-Right / z-20) - Vibrant Fresh Salad Bowl (Swapped on top) */}
                         <div className="absolute top-[5%] right-[5%] w-[56%] h-[56%] rounded-full shadow-[0_20px_45px_rgba(0,0,0,0.45)] overflow-hidden border-4 border-white z-20 transition-transform duration-500 hover:scale-[1.03] animate-float-slow">
                             <img
-                                src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&h=600&q=80"
-                                alt="Artisanal baked pizza by Chad Montano"
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-
-                        {/* Dish 2: Lower Left (z-10) - Overlapped behind/underneath Dish 1 */}
-                        <div className="absolute top-[35%] left-[5%] w-[46%] h-[46%] rounded-full shadow-[0_15px_35px_rgba(0,0,0,0.4)] overflow-hidden border-4 border-white z-10 transition-transform duration-500 hover:scale-[1.03] animate-float-reverse">
-                            <img
-                                src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&h=500&q=80"
+                                src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&h=600&q=80"
                                 alt="Vibrant fresh salad platter"
                                 className="w-full h-full object-cover"
                             />
                         </div>
 
-                        {/* Dish 3: Lower Right (z-30) - Sitting under Dish 1 but overlapping a bit with Dish 2 */}
+                        {/* Dish 2: Lower Left (z-10) - Chad Montano's Pizza (Swapped underneath Dish 1) */}
+                        <div className="absolute top-[35%] left-[5%] w-[46%] h-[46%] rounded-full shadow-[0_15px_35px_rgba(0,0,0,0.4)] overflow-hidden border-4 border-white z-10 transition-transform duration-500 hover:scale-[1.03] animate-float-reverse">
+                            <img
+                                src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=500&h=500&q=80"
+                                alt="Artisanal baked pizza by Chad Montano"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+
+                        {/* Dish 3: Lower Right (z-30) - Overlaps with both dishes */}
                         <div className="absolute bottom-[5%] right-[15%] w-[48%] h-[48%] rounded-full shadow-[0_22px_50px_rgba(0,0,0,0.5)] overflow-hidden border-4 border-white z-30 transition-transform duration-500 hover:scale-[1.03] animate-float-delayed">
                             <img
                                 src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=500&h=500&q=80"
@@ -274,4 +298,3 @@ const HomeHero: React.FC<Props> = ({
 };
 
 export default HomeHero;
-
