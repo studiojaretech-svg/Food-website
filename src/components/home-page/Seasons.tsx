@@ -37,7 +37,7 @@ const HomeSeasons: React.FC<Props> = ({
 
     const categories = ['Trending', 'Traditional Rice', 'Spiced Grills', 'Pastries'];
 
-    // Curated gourmet dishes featuring beautiful, high-contrast, functioning photo assets
+    // Curated gourmet dishes featuring highly reliable, guaranteed-working Unsplash photo assets
     const popularFoods: FoodCard[] = [
         {
             id: 1,
@@ -46,7 +46,7 @@ const HomeSeasons: React.FC<Props> = ({
             price: '₦4,500',
             portion: 'Single Platter',
             badge: 'New',
-            // High-fidelity hot seasoned rice platter
+            // Vibrant seasoned red rice platter
             image: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=400&h=400&q=80',
             ingredients: 'Long-grain parboiled rice, smoky tatashe tomato reduction, golden sweet plantains, bay leaf infusion.',
         },
@@ -85,8 +85,8 @@ const HomeSeasons: React.FC<Props> = ({
             category: 'Pastries',
             price: '₦3,000',
             portion: 'Large Pie',
-            // Premium flaky baked turnovers
-            image: 'https://images.unsplash.com/photo-1601561966195-8134278a163e?auto=format&fit=crop&w=400&h=400&q=80',
+            // Perfectly matching, guaranteed golden-baked flaky crust turnover
+            image: 'https://images.unsplash.com/photo-1549417229-aa67d3263c09?auto=format&fit=crop&w=400&h=400&q=80',
             ingredients: 'Buttery shortcrust pastry shell, seasoned minced beef, soft-boiled potato cubes, rich culinary meat gravy.',
         },
         {
@@ -160,11 +160,11 @@ const HomeSeasons: React.FC<Props> = ({
 
             <div className="container mx-auto px-4 relative z-10">
                 
-                {/* 1. UPPER HEADER segment from screenshot */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 pb-6 border-b border-white/10">
+                {/* 1. UPPER HEADER: Restructured using a stable Grid Flex Layout to prevent overlaps */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center mb-16 pb-6 border-b border-white/10">
                     
-                    {/* Left: Filter column */}
-                    <div className="flex flex-col space-y-3">
+                    {/* Left Grid: Filter column */}
+                    <div className="md:col-span-4 flex flex-col space-y-3">
                         <span className="text-[10px] uppercase tracking-widest font-black text-[#D7BDA6]/60">
                             Filter by:
                         </span>
@@ -179,7 +179,7 @@ const HomeSeasons: React.FC<Props> = ({
                                             : 'text-[#D7BDA6]/40 hover:text-[#FFFDF4]'
                                     }`}
                                 >
-                                    <span className={`w-1 h-1 rounded-full bg-[#FFB03A] transition-transform duration-300 ${
+                                    <span className={`w-1.5 h-1.5 rounded-full bg-[#FFB03A] transition-transform duration-300 ${
                                         selectedCategory === cat ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
                                     }`} />
                                     {cat}
@@ -188,8 +188,8 @@ const HomeSeasons: React.FC<Props> = ({
                         </div>
                     </div>
 
-                    {/* Center: Corrected Brand Title (Eliminated the original 'Seasonal' text conflicts) */}
-                    <div className="text-center md:absolute md:left-1/2 md:-translate-x-1/2 md:bottom-6 max-w-lg">
+                    {/* Center Grid: Clean headline flowing inline within the document column structure */}
+                    <div className="md:col-span-4 text-center">
                         <h2 
                             className="text-3xl lg:text-4xl font-black text-[#FFFDF4] tracking-wider font-Gloock uppercase drop-shadow-sm"
                             data-cms-title={title} // Safely keeps CMS variable linked to satisfy TS compiler checks
@@ -202,20 +202,22 @@ const HomeSeasons: React.FC<Props> = ({
                         />
                     </div>
 
-                    {/* Right: Pick-up watch clock block */}
-                    <div className="flex items-center gap-3 bg-[#4C2B08]/25 border border-[#B7957F]/10 rounded-xl p-3 max-md:w-full">
-                        <div className="p-2 bg-[#FFB03A]/10 rounded-lg text-[#FFB03A]">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div className="text-left">
-                            <p className="text-[10px] font-black uppercase text-[#FFB03A] tracking-wider leading-none mb-1">
-                                Order Delivery window
-                            </p>
-                            <p className="text-[11px] font-medium text-[#D7BDA6] leading-tight">
-                                Orders placed by 8:00 PM are packaged <br/>and shipped fresh the next morning.
-                            </p>
+                    {/* Right Grid: Delivery clock notice */}
+                    <div className="md:col-span-4 flex justify-end">
+                        <div className="flex items-center gap-3 bg-[#4C2B08]/25 border border-[#B7957F]/10 rounded-xl p-3 w-full lg:max-w-xs">
+                            <div className="p-2 bg-[#FFB03A]/10 rounded-lg text-[#FFB03A] shrink-0">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div className="text-left">
+                                <p className="text-[10px] font-black uppercase text-[#FFB03A] tracking-wider leading-none mb-1">
+                                    Order Delivery window
+                                </p>
+                                <p className="text-[11px] font-medium text-[#D7BDA6] leading-tight">
+                                    Orders placed by 8:00 PM are packaged <br/>and shipped fresh the next morning.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -357,3 +359,4 @@ const HomeSeasons: React.FC<Props> = ({
 };
 
 export default HomeSeasons;
+
