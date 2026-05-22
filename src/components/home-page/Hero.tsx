@@ -18,13 +18,8 @@ interface Props {
     bcmsConfig: ClientConfig;
 }
 
-// Explicit, strict type definition representing the structure of a BCMS text/content node
-interface BCMSContentNode {
-    type?: string;
-    value?: string;
-    nodes?: BCMSContentNode[];
-    [key: string]: unknown;
-}
+// Dynamically extract the exact type definition of a BCMS rich-text content node
+type BCMSNode = typeof open_time.nodes[number];
 
 const HomeHero: React.FC<Props> = ({
     title,
@@ -59,23 +54,24 @@ const HomeHero: React.FC<Props> = ({
         },
     ];
 
-    // Helper function with explicit TypeScript structures replacing the disallowed 'any' type
-    const replaceTextInNodes = (nodes: BCMSContentNode[]): BCMSContentNode[] => {
+    // Helper function with explicit TypeScript structures extracted dynamically from the props
+    const replaceTextInNodes = (nodes: BCMSNode[]): BCMSNode[] => {
         if (!nodes) return [];
         return nodes.map((node) => {
-            const newNode: BCMSContentNode = { ...node };
-            if (typeof newNode.value === 'string') {
-                newNode.value = newNode.value.replace(/welcome to tastyyy/gi, 'Welcome to Cravenest');
-                newNode.value = newNode.value.replace(/tastyyy/gi, 'Cravenest');
+            const newNode = { ...node } as BCMSNode;
+            if (newNode && 'value' in newNode && typeof newNode.value === 'string') {
+                (newNode as { value?: string }).value = newNode.value
+                    .replace(/welcome to tastyyy/gi, 'Welcome to Cravenest')
+                    .replace(/tastyyy/gi, 'Cravenest');
             }
-            if (newNode.nodes && Array.isArray(newNode.nodes)) {
-                newNode.nodes = replaceTextInNodes(newNode.nodes);
+            if (newNode && 'nodes' in newNode && newNode.nodes && Array.isArray(newNode.nodes)) {
+                (newNode as { nodes?: BCMSNode[] }).nodes = replaceTextInNodes(newNode.nodes as BCMSNode[]);
             }
             return newNode;
         });
     };
 
-    const processedOpenTimeNodes = replaceTextInNodes(open_time.nodes as BCMSContentNode[]);
+    const processedOpenTimeNodes = replaceTextInNodes(open_time.nodes as BCMSNode[]);
 
     return (
         <section 
@@ -195,7 +191,7 @@ const HomeHero: React.FC<Props> = ({
                         {/* Clean descriptions with "Tastyyy" text replaced, styled in premium italic editorial Gloock serif */}
                         <div className="text-lg md:text-xl text-[#FFFDF4]/95 leading-relaxed font-normal font-Gloock italic tracking-wide max-w-2xl animate-reveal-2 text-shadow-premium">
                             {description.map((item, index) => {
-                                const processedNodes = replaceTextInNodes((item.text?.nodes || []) as BCMSContentNode[]);
+                                const processedNodes = replaceTextInNodes((item.text?.nodes || []) as BCMSNode[]);
                                 return (
                                     <span key={index} className="inline mr-1 mb-1">
                                         {item.text && item.text.nodes.length > 0 && (
@@ -226,7 +222,7 @@ const HomeHero: React.FC<Props> = ({
 
                         {/* Category Shortcut Ribbon (Sleek dark cards with white text) */}
                         <div className="pt-6 border-t border-white/20 animate-reveal-3">
-                            <p className="text-[14px] font-black uppercase tracking-widest text-[#FF9130] mb-3 text-shadow-premium">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-[#FF9130] mb-3 text-shadow-premium">
                                 Jump straight to menus
                             </p>
                             
