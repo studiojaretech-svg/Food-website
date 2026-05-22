@@ -18,6 +18,14 @@ interface Props {
     bcmsConfig: ClientConfig;
 }
 
+// Explicit, strict type definition representing the structure of a BCMS text/content node
+interface BCMSContentNode {
+    type?: string;
+    value?: string;
+    nodes?: BCMSContentNode[];
+    [key: string]: unknown;
+}
+
 const HomeHero: React.FC<Props> = ({
     title,
     open_time,
@@ -51,11 +59,11 @@ const HomeHero: React.FC<Props> = ({
         },
     ];
 
-    // Helper function to dynamically clean placeholder content from BCMS nodes
-    const replaceTextInNodes = (nodes: any[]): any[] => {
+    // Helper function with explicit TypeScript structures replacing the disallowed 'any' type
+    const replaceTextInNodes = (nodes: BCMSContentNode[]): BCMSContentNode[] => {
         if (!nodes) return [];
         return nodes.map((node) => {
-            const newNode = { ...node };
+            const newNode: BCMSContentNode = { ...node };
             if (typeof newNode.value === 'string') {
                 newNode.value = newNode.value.replace(/welcome to tastyyy/gi, 'Welcome to Cravenest');
                 newNode.value = newNode.value.replace(/tastyyy/gi, 'Cravenest');
@@ -67,7 +75,7 @@ const HomeHero: React.FC<Props> = ({
         });
     };
 
-    const processedOpenTimeNodes = replaceTextInNodes(open_time.nodes);
+    const processedOpenTimeNodes = replaceTextInNodes(open_time.nodes as BCMSContentNode[]);
 
     return (
         <section 
@@ -112,6 +120,9 @@ const HomeHero: React.FC<Props> = ({
                 }
                 .animate-float-reverse {
                     animation: float-reverse 7s ease-in-out infinite;
+                }
+                .animate-spin-slow {
+                    animation: spin-ultra-slow 75s linear infinite;
                 }
                 .animate-float-delayed {
                     animation: float-delayed 8s ease-in-out infinite;
@@ -171,7 +182,7 @@ const HomeHero: React.FC<Props> = ({
                                 Freshly Sourced Ingredients
                             </span>
                             
-                            {/* Brand Name Title with "Crave" in Gold and "Nest" completely in White */}
+                            {/* Brand Name Title with "Crave" in Gold and "Nest" in White */}
                             <h1 
                                 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] font-Gloock text-shadow-premium flex flex-wrap items-center"
                                 data-cms-title={title}
@@ -184,7 +195,7 @@ const HomeHero: React.FC<Props> = ({
                         {/* Clean descriptions with "Tastyyy" text replaced, styled in premium italic editorial Gloock serif */}
                         <div className="text-lg md:text-xl text-[#FFFDF4]/95 leading-relaxed font-normal font-Gloock italic tracking-wide max-w-2xl animate-reveal-2 text-shadow-premium">
                             {description.map((item, index) => {
-                                const processedNodes = replaceTextInNodes(item.text?.nodes || []);
+                                const processedNodes = replaceTextInNodes((item.text?.nodes || []) as BCMSContentNode[]);
                                 return (
                                     <span key={index} className="inline mr-1 mb-1">
                                         {item.text && item.text.nodes.length > 0 && (
@@ -215,7 +226,7 @@ const HomeHero: React.FC<Props> = ({
 
                         {/* Category Shortcut Ribbon (Sleek dark cards with white text) */}
                         <div className="pt-6 border-t border-white/20 animate-reveal-3">
-                            <p className="text-[13px] font-black uppercase tracking-widest text-[#FF9130] mb-3 text-shadow-premium">
+                            <p className="text-[14px] font-black uppercase tracking-widest text-[#FF9130] mb-3 text-shadow-premium">
                                 Jump straight to menus
                             </p>
                             
@@ -255,7 +266,7 @@ const HomeHero: React.FC<Props> = ({
                         {/* Soft Ambient Core Glow behind the entire cluster */}
                         <div className="absolute w-[90%] h-[90%] rounded-full bg-[#FF9130]/5 blur-3xl pointer-events-none" />
                         
-                        {/* Dish 1: Primary Upper (Center-Right / z-20) - Vibrant Fresh Salad Bowl (Swapped on top) */}
+                        {/* Dish 1: Primary Upper (Center-Right / z-20) - Vibrant Fresh Salad Bowl (Floating on top) */}
                         <div className="absolute top-[5%] right-[5%] w-[56%] h-[56%] rounded-full shadow-[0_20px_45px_rgba(0,0,0,0.45)] overflow-hidden border-4 border-white z-20 transition-transform duration-500 hover:scale-[1.03] animate-float-slow">
                             <img
                                 src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&h=600&q=80"
@@ -298,3 +309,4 @@ const HomeHero: React.FC<Props> = ({
 };
 
 export default HomeHero;
+
