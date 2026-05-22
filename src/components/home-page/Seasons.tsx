@@ -9,7 +9,7 @@ import { PropRichTextDataParsed } from '@thebcms/types';
 interface Props {
     title: string;
     description: PropRichTextDataParsed;
-    seasons: unknown; // Safe generic structure to avoid any strict CMS type mapping mismatch
+    seasons: unknown; // Keeps standard template compatibility intact
     bcmsConfig: ClientConfig;
 }
 
@@ -32,12 +32,12 @@ const HomeSeasons: React.FC<Props> = ({
     description,
 }) => {
     const [selectedCategory, setSelectedCategory] = useState('Trending');
-    const [activeTooltipId, setActiveTooltipId] = useState<number | null>(2); // Starts with Card 2 active to mimic the reference shot
-    const [addedItems, setAddedItems] = useState<number[]>([2]); // Card 2 starts checked/added
+    const [activeCardId, setActiveCardId] = useState<number | null>(null);
+    const [addedItems, setAddedItems] = useState<number[]>([]);
 
     const categories = ['Trending', 'Traditional Rice', 'Spiced Grills', 'Pastries'];
 
-    // Authentic Nigerian gourmet plates with top-down photography
+    // Curated gourmet dishes featuring beautiful, high-contrast, functioning photo assets
     const popularFoods: FoodCard[] = [
         {
             id: 1,
@@ -46,7 +46,8 @@ const HomeSeasons: React.FC<Props> = ({
             price: '₦4,500',
             portion: 'Single Platter',
             badge: 'New',
-            image: 'https://images.unsplash.com/photo-1626700051175-6518c4793f4f?auto=format&fit=crop&w=400&h=400&q=80',
+            // High-fidelity hot seasoned rice platter
+            image: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=400&h=400&q=80',
             ingredients: 'Long-grain parboiled rice, smoky tatashe tomato reduction, golden sweet plantains, bay leaf infusion.',
         },
         {
@@ -61,13 +62,13 @@ const HomeSeasons: React.FC<Props> = ({
         },
         {
             id: 3,
-            name: 'Golden Cardamom Puff Puff',
+            name: 'Glazed Doughnuts',
             category: 'Pastries',
             price: '₦2,500',
             portion: '6 pcs Portion',
-            badge: 'Freshly Baked',
+            badge: 'Popular',
             image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=400&h=400&q=80',
-            ingredients: 'Sweet yeasted flour dough, organic cardamom seeds, raw cane sugar dusting, deep-fried to crisp perfection.',
+            ingredients: 'Light yeasted doughnut dough, rich sweet sugar glaze, premium organic vanilla bean finish.',
         },
         {
             id: 4,
@@ -84,7 +85,8 @@ const HomeSeasons: React.FC<Props> = ({
             category: 'Pastries',
             price: '₦3,000',
             portion: 'Large Pie',
-            image: 'https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=400&h=400&q=80',
+            // Premium flaky baked turnovers
+            image: 'https://images.unsplash.com/photo-1601561966195-8134278a163e?auto=format&fit=crop&w=400&h=400&q=80',
             ingredients: 'Buttery shortcrust pastry shell, seasoned minced beef, soft-boiled potato cubes, rich culinary meat gravy.',
         },
         {
@@ -158,8 +160,8 @@ const HomeSeasons: React.FC<Props> = ({
 
             <div className="container mx-auto px-4 relative z-10">
                 
-                {/* 1. UPPER HEADER segment from screenshot (Title, Category navigation, Notice clock) */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 pb-6 border-b border-white/10">
+                {/* 1. UPPER HEADER segment from screenshot */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 pb-6 border-b border-white/10">
                     
                     {/* Left: Filter column */}
                     <div className="flex flex-col space-y-3">
@@ -171,7 +173,7 @@ const HomeSeasons: React.FC<Props> = ({
                                 <button
                                     key={cat}
                                     onClick={() => setSelectedCategory(cat)}
-                                    className={`flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-left transition-colors whitespace-nowrap ${
+                                    className={`flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-left transition-colors whitespace-nowrap cursor-pointer ${
                                         selectedCategory === cat 
                                             ? 'text-[#FFB03A]' 
                                             : 'text-[#D7BDA6]/40 hover:text-[#FFFDF4]'
@@ -186,7 +188,7 @@ const HomeSeasons: React.FC<Props> = ({
                         </div>
                     </div>
 
-                    {/* Center: Title from screenshot */}
+                    {/* Center: Title */}
                     <div className="text-center md:absolute md:left-1/2 md:-translate-x-1/2 md:bottom-6 max-w-lg">
                         <h2 className="text-3xl lg:text-4xl font-black text-[#FFFDF4] tracking-wider font-Gloock uppercase drop-shadow-sm">
                             {title || 'CUSTOMER FAVOURITES'}
@@ -197,7 +199,7 @@ const HomeSeasons: React.FC<Props> = ({
                         />
                     </div>
 
-                    {/* Right: Pick-up watch clock block from screenshot */}
+                    {/* Right: Pick-up watch clock block */}
                     <div className="flex items-center gap-3 bg-[#4C2B08]/25 border border-[#B7957F]/10 rounded-xl p-3 max-md:w-full">
                         <div className="p-2 bg-[#FFB03A]/10 rounded-lg text-[#FFB03A]">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,20 +218,21 @@ const HomeSeasons: React.FC<Props> = ({
                 </div>
 
                 {/* 2. THE GRID OF DELICACIES */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative mb-16">
                     {filteredFoods.map((food) => {
-                        const isTooltipOpen = activeTooltipId === food.id;
+                        const isHoveredOrHeld = activeCardId === food.id;
                         const isItemAdded = addedItems.includes(food.id);
-                        
-                        // Food ID 2 matches the active featured Caramel backdrop from the screenshot
-                        const isCaramelHighlighted = food.id === 2;
 
                         return (
                             <div 
                                 key={food.id}
-                                className={`group relative p-6 rounded-3xl transition-all duration-500 flex flex-col justify-between overflow-visible ${
-                                    isCaramelHighlighted 
-                                        ? 'bg-[#AB7743] text-white shadow-2xl scale-[1.01] border border-[#FFB03A]/30' 
+                                onMouseEnter={() => setActiveCardId(food.id)}
+                                onMouseLeave={() => setActiveCardId(null)}
+                                onTouchStart={() => setActiveCardId(food.id)}
+                                onTouchEnd={() => setActiveCardId(null)}
+                                className={`group relative p-6 rounded-3xl transition-all duration-300 flex flex-col justify-between overflow-visible cursor-pointer ${
+                                    isHoveredOrHeld 
+                                        ? 'bg-[#AB7743] text-white shadow-2xl scale-[1.02] border border-[#FFB03A]/30' 
                                         : 'bg-[#1a0c02] border border-white/5 shadow-lg hover:border-[#B7957F]/20'
                                 }`}
                             >
@@ -237,7 +240,7 @@ const HomeSeasons: React.FC<Props> = ({
                                 <div className="flex justify-between items-center mb-6">
                                     {food.badge ? (
                                         <span className={`text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full ${
-                                            isCaramelHighlighted 
+                                            isHoveredOrHeld 
                                                 ? 'bg-[#4C2B08] text-white' 
                                                 : 'bg-[#FFB03A]/10 border border-[#FFB03A]/20 text-[#FFB03A]'
                                         }`}>
@@ -247,17 +250,16 @@ const HomeSeasons: React.FC<Props> = ({
                                         <div />
                                     )}
 
-                                    {/* Info Bubble Button */}
-                                    <button 
-                                        onClick={() => setActiveTooltipId(isTooltipOpen ? null : food.id)}
-                                        className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-                                            isCaramelHighlighted 
-                                                ? 'bg-[#4C2B08]/40 text-white hover:bg-[#4C2B08]/60' 
-                                                : 'bg-white/5 text-[#D7BDA6] hover:bg-white/10 hover:text-[#FFB03A]'
+                                    {/* Info Bubble Icon Indicator */}
+                                    <div 
+                                        className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
+                                            isHoveredOrHeld 
+                                                ? 'bg-[#4C2B08]/40 text-white' 
+                                                : 'bg-white/5 text-[#D7BDA6]'
                                         }`}
                                     >
                                         <span className="text-xs font-semibold leading-none">i</span>
-                                    </button>
+                                    </div>
                                 </div>
 
                                 {/* Top-Down Platter Photo Container */}
@@ -271,21 +273,15 @@ const HomeSeasons: React.FC<Props> = ({
                                         />
                                     </div>
 
-                                    {/* 3. POP-UP INGREDIENT TOOLTIP (Styled exactly like screenshot) */}
-                                    {isTooltipOpen && (
-                                        <div className="absolute inset-x-0 bottom-[-20px] mx-auto w-[90%] bg-[#361c07] border border-[#B7957F]/20 text-white rounded-xl p-3 shadow-2xl z-20 animate-fade-in">
+                                    {/* 3. POP-UP INGREDIENT TOOLTIP (Triggers when hovered or held) */}
+                                    {isHoveredOrHeld && (
+                                        <div className="absolute inset-x-0 bottom-[-20px] mx-auto w-[90%] bg-[#361c07] border border-[#B7957F]/20 text-white rounded-xl p-3 shadow-2xl z-20 animate-fade-in pointer-events-none">
                                             <p className="text-[10px] font-black uppercase tracking-wider text-[#FFB03A] mb-1">
                                                 Ingredients
                                             </p>
                                             <p className="text-[11px] leading-relaxed text-[#D7BDA6]/95">
                                                 {food.ingredients}
                                             </p>
-                                            <button 
-                                                onClick={() => setActiveTooltipId(null)}
-                                                className="absolute top-2 right-2 text-xs text-[#D7BDA6]/50 hover:text-white"
-                                            >
-                                                ✕
-                                            </button>
                                         </div>
                                     )}
                                 </div>
@@ -293,7 +289,7 @@ const HomeSeasons: React.FC<Props> = ({
                                 {/* Food details */}
                                 <div className="text-left mt-auto">
                                     <h3 className={`text-base font-black font-Gloock mb-4 tracking-tight uppercase leading-tight ${
-                                        isCaramelHighlighted ? 'text-white' : 'text-[#FFFDF4]'
+                                        isHoveredOrHeld ? 'text-white' : 'text-[#FFFDF4]'
                                     }`}>
                                         {food.name}
                                     </h3>
@@ -302,12 +298,12 @@ const HomeSeasons: React.FC<Props> = ({
                                     <div className="flex justify-between items-end">
                                         <div className="flex flex-col">
                                             <span className={`text-[10px] uppercase font-bold tracking-widest ${
-                                                isCaramelHighlighted ? 'text-white/70' : 'text-[#D7BDA6]/55'
+                                                isHoveredOrHeld ? 'text-white/70' : 'text-[#D7BDA6]/55'
                                             }`}>
                                                 {food.portion}
                                             </span>
                                             <span className={`text-base font-black tracking-tight ${
-                                                isCaramelHighlighted ? 'text-white font-Gloock' : 'text-[#FFB03A]'
+                                                isHoveredOrHeld ? 'text-white font-Gloock' : 'text-[#FFB03A]'
                                             }`}>
                                                 {food.price}
                                             </span>
@@ -315,11 +311,14 @@ const HomeSeasons: React.FC<Props> = ({
 
                                         {/* Golden / Highlighted Action Button Capsule */}
                                         <button
-                                            onClick={() => toggleCart(food.id)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleCart(food.id);
+                                            }}
                                             className={`flex items-center justify-center rounded-lg px-3.5 py-1.5 transition-all text-[11px] font-black uppercase tracking-wider cursor-pointer shadow-md ${
                                                 isItemAdded 
                                                     ? 'bg-emerald-500 hover:bg-emerald-600 text-white' 
-                                                    : isCaramelHighlighted
+                                                    : isHoveredOrHeld
                                                         ? 'bg-white text-neutral-950 hover:bg-white/90'
                                                         : 'bg-[#AB7743] hover:bg-[#966535] text-white'
                                             }`}
@@ -339,8 +338,8 @@ const HomeSeasons: React.FC<Props> = ({
                     })}
                 </div>
 
-                {/* 3. VIEW ALL CTA (Linked directly to main menu router, not anchor index) */}
-                <div className="mt-14 flex justify-center">
+                {/* 3. VIEW ALL CTA (Properly spaced layout to avoid clashing with next elements) */}
+                <div className="flex justify-center pt-4 pb-8">
                     <Link
                         href="/menu"
                         className="inline-flex items-center gap-2 uppercase px-8 py-4 bg-[#AB7743] hover:bg-[#966535] text-white rounded-full text-xs font-black tracking-widest shadow-lg transition-transform hover:scale-[1.02] cursor-pointer"
@@ -355,3 +354,4 @@ const HomeSeasons: React.FC<Props> = ({
 };
 
 export default HomeSeasons;
+
