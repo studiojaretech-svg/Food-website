@@ -99,7 +99,7 @@ const HomeHero: React.FC<Props> = ({
 
             <div className="container mx-auto px-4 relative z-10">
 {/* Change line 83 to look like this */}
-<div className="absolute inset-0 bg-white/60 pointer-events-none" />
+<div className="absolute inset-0 bg-white/40 pointer-events-none" />
                 {/* Upper Meta Info Row: Location & Timing */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-8 pb-4 border-b border-gray-900/10">
                     <div className="flex items-center gap-2">
