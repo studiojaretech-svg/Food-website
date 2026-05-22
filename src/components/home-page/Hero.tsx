@@ -29,28 +29,28 @@ const HomeHero: React.FC<Props> = ({
     description,
     bcmsConfig,
 }) => {
-    // Beautiful top-down food thumbnail images for the menu shortcut cards
+    // Beautiful top-down food thumbnail images with hover borders mapped to our brand's warm Saffron Gold
     const categoryCards = [
         {
             id: 'bowls',
             title: 'Gourmet Bowls',
             desc: 'Healthy & vibrant',
             image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=200&h=200&q=80',
-            border: 'hover:border-amber-400',
+            border: 'hover:border-[#FFB03A]',
         },
         {
             id: 'signature',
             title: 'Chef Specials',
             desc: 'Warm artisanal plates',
             image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=200&h=200&q=80',
-            border: 'hover:border-amber-400',
+            border: 'hover:border-[#FFB03A]',
         },
         {
             id: 'sides',
             title: 'Sides & Snacks',
             desc: 'Crisp & fresh treats',
             image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=200&h=200&q=80',
-            border: 'hover:border-amber-400',
+            border: 'hover:border-[#FFB03A]',
         },
     ];
 
@@ -75,7 +75,7 @@ const HomeHero: React.FC<Props> = ({
 
     return (
         <section 
-            className="relative pt-20 pb-12 md:pt-28 md:pb-20 lg:pt-36 lg:pb-28 overflow-hidden bg-neutral-950"
+            className="relative pt-20 pb-12 md:pt-28 md:pb-20 lg:pt-36 lg:pb-28 overflow-hidden bg-[#4C2B08]"
             style={{
                 backgroundImage: "url('/hero.jpg')",
                 backgroundSize: 'cover',
@@ -139,10 +139,10 @@ const HomeHero: React.FC<Props> = ({
             <div className="container mx-auto px-4 relative z-10">
                 
                 {/* Upper Metadata Row: Location & Hours with enlarged text */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-4 border-b border-white/25">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-4 border-b border-white/20">
                     <div className="flex items-center gap-2">
-                        <div className="p-1.5 bg-amber-500 rounded-full shadow-md">
-                            <StarIcon className="w-4 h-4 text-neutral-950" />
+                        <div className="p-1.5 bg-[#FFB03A] rounded-full shadow-md">
+                            <StarIcon className="w-4 h-4 text-[#4C2B08]" />
                         </div>
                         <div>
                             {/* Enlarged Location Text */}
@@ -158,10 +158,10 @@ const HomeHero: React.FC<Props> = ({
                         </div>
                         {/* Enlarged Hours Text */}
                         <div className="text-right sm:text-left flex items-center gap-2 text-shadow-premium">
-                            <span className="text-sm text-[#FF9130] uppercase tracking-widest font-black">Hours:</span>
+                            <span className="text-sm text-[#FFB03A] uppercase tracking-widest font-black">Hours:</span>
                             <ContentManager
                                 items={processedOpenTimeNodes}
-                                className="text-sm md:text-base text-[#FFFDF4] font-extrabold [&_strong]:text-[#FF9130]"
+                                className="text-sm md:text-base text-[#FFFDF4] font-extrabold [&_strong]:text-[#FFB03A]"
                             />
                         </div>
                     </div>
@@ -173,8 +173,8 @@ const HomeHero: React.FC<Props> = ({
                     {/* LEFT COLUMN: Editorial Copy & Category Navigation */}
                     <div className="lg:col-span-7 flex flex-col space-y-6">
                         <div className="space-y-3 animate-reveal-1">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500 text-neutral-950 text-[10px] font-black tracking-widest uppercase shadow-md">
-                                <span className="w-1.5 h-1.5 rounded-full bg-neutral-950 animate-ping"></span>
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFB03A]/25 border border-[#FFB03A]/40 text-[#FFB03A] text-[10px] font-black tracking-widest uppercase shadow-md">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#FFB03A] animate-ping"></span>
                                 Freshly Sourced Ingredients
                             </span>
                             
@@ -195,7 +195,7 @@ const HomeHero: React.FC<Props> = ({
                                 return (
                                     <span key={index} className="inline mr-1 mb-1">
                                         {item.text && item.text.nodes.length > 0 && (
-                                            <span className="bg-neutral-950/25 px-1 py-0.5 rounded backdrop-blur-[0.5px]">
+                                            <span className="bg-[#4C2B08]/30 px-1 py-0.5 rounded backdrop-blur-[0.5px]">
                                                 <ContentManager items={processedNodes} className="inline" />
                                             </span>
                                         )}
@@ -208,21 +208,21 @@ const HomeHero: React.FC<Props> = ({
                         <div className="flex items-center gap-4 pt-1 animate-reveal-2">
                             <Btn 
                                 to="/menu" 
-                                className="uppercase px-7 py-3.5 bg-[#C29D6E] text-neutral-950 hover:bg-[#b58f5f] rounded-full text-xs font-black tracking-wider shadow-lg hover:scale-[1.02] transition-all"
+                                className="uppercase px-7 py-3.5 bg-[#AB7743] hover:bg-[#966535] text-white rounded-full text-xs font-black tracking-wider shadow-lg hover:scale-[1.02] transition-all"
                             >
                                 <span>Order Now</span>
                             </Btn>
                             <Btn 
                                 to="/about-us" 
-                                className="uppercase px-7 py-3.5 bg-white text-neutral-950 hover:bg-neutral-50 rounded-full text-xs font-black tracking-wider shadow-lg hover:scale-[1.02] transition-all"
+                                className="uppercase px-7 py-3.5 bg-white text-[#4C2B08] hover:bg-[#FFFDF4] rounded-full text-xs font-black tracking-wider shadow-lg hover:scale-[1.02] transition-all"
                             >
                                 <span>Explore Story</span>
                             </Btn>
                         </div>
 
-                        {/* Category Shortcut Ribbon (Sleek dark cards with white text) */}
+                        {/* Category Shortcut Ribbon (Sleek Espresso cards with Vanilla borders) */}
                         <div className="pt-6 border-t border-white/20 animate-reveal-3">
-                            <p className="text-[14px] font-black uppercase tracking-widest text-[#FF9130] mb-3 text-shadow-premium">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-[#FFB03A] mb-3 text-shadow-premium">
                                 Jump straight to menus
                             </p>
                             
@@ -230,9 +230,9 @@ const HomeHero: React.FC<Props> = ({
                                 {categoryCards.map((card) => (
                                     <div
                                         key={card.id}
-                                        className={`group relative flex-shrink-0 w-[230px] sm:w-auto snap-center flex items-center gap-3 p-2 bg-neutral-950/80 backdrop-blur-md border border-white/10 rounded-xl cursor-pointer transition-all duration-300 shadow-lg ${card.border}`}
+                                        className={`group relative flex-shrink-0 w-[230px] sm:w-auto snap-center flex items-center gap-3 p-2 bg-[#4C2B08]/85 backdrop-blur-md border border-[#B7957F]/20 rounded-xl cursor-pointer transition-all duration-300 shadow-lg ${card.border}`}
                                     >
-                                        <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 shadow-inner bg-[#C29D6E]/20">
+                                        <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 shadow-inner bg-[#AB7743]/10">
                                             <img
                                                 src={card.image}
                                                 alt={card.title}
@@ -243,11 +243,11 @@ const HomeHero: React.FC<Props> = ({
                                             <h3 className="text-xs font-black text-white leading-tight truncate">
                                                 {card.title}
                                             </h3>
-                                            <p className="text-[10px] font-medium text-gray-400 leading-tight truncate">
+                                            <p className="text-[10px] font-medium text-[#D7BDA6] leading-tight truncate">
                                                 {card.desc}
                                             </p>
                                         </div>
-                                        <div className="absolute right-2.5 text-xs text-gray-400 group-hover:text-white group-hover:translate-x-0.5 transition-all">
+                                        <div className="absolute right-2.5 text-xs text-[#D7BDA6]/60 group-hover:text-[#FFB03A] group-hover:translate-x-0.5 transition-all">
                                             →
                                         </div>
                                     </div>
@@ -259,8 +259,8 @@ const HomeHero: React.FC<Props> = ({
                     {/* RIGHT COLUMN: Overlapping 3-Dish Photographic Collage Cluster */}
                     <div className="lg:col-span-5 relative flex justify-center items-center h-[350px] sm:h-[450px] lg:h-[500px] mt-8 lg:mt-0">
                         
-                        {/* Soft Ambient Core Glow behind the entire cluster */}
-                        <div className="absolute w-[90%] h-[90%] rounded-full bg-[#FF9130]/5 blur-3xl pointer-events-none" />
+                        {/* Soft Ambient Core Glow behind the entire cluster using warm Saffron Gold */}
+                        <div className="absolute w-[90%] h-[90%] rounded-full bg-[#FFB03A]/5 blur-3xl pointer-events-none" />
                         
                         {/* Dish 1: Primary Upper (Center-Right / z-20) - Vibrant Fresh Salad Bowl (Floating on top) */}
                         <div className="absolute top-[5%] right-[5%] w-[56%] h-[56%] rounded-full shadow-[0_20px_45px_rgba(0,0,0,0.45)] overflow-hidden border-4 border-white z-20 transition-transform duration-500 hover:scale-[1.03] animate-float-slow">
