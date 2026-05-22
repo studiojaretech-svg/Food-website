@@ -46,26 +46,26 @@ const HomeMenu: React.FC<Props> = ({
     const processedDescriptionNodes = replaceTextInNodes(description.nodes as BCMSNode[]);
 
     return (
-        <section className="relative bg-[#1C0F03] pt-16 pb-8 lg:pt-24 lg:pb-12 overflow-hidden">
-            {/* Soft Ambient Background Glows */}
-            <div className="absolute top-[20%] right-[-10%] w-[45%] h-[45%] rounded-full bg-[#FFB03A]/5 blur-3xl pointer-events-none" />
-            <div className="absolute bottom-[20%] left-[-10%] w-[45%] h-[45%] rounded-full bg-[#AB7743]/5 blur-3xl pointer-events-none" />
+        <section className="relative bg-[#84593D] pt-16 pb-8 lg:pt-24 lg:pb-12 overflow-hidden transition-colors duration-500">
+            {/* Soft Ambient Background Highlights to add beautiful depth inside the Mocca theme */}
+            <div className="absolute top-[10%] left-[-15%] w-[50%] h-[50%] rounded-full bg-[#FFFDF4]/10 blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[10%] right-[-15%] w-[50%] h-[50%] rounded-full bg-[#FFB03A]/10 blur-[120px] pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
                 {/* Header Segment */}
-                <div className="flex flex-col items-center text-center mb-10 lg:mb-16 max-w-[765px] mx-auto">
-                    {/* Index Tag Styled in Saffron Gold */}
-                    <div className="text-xs lg:text-sm font-black tracking-widest text-[#FFB03A] uppercase mb-3">
-                        [ 1 ]
+                <div className="flex flex-col items-center text-center mb-12 lg:mb-18 max-w-[765px] mx-auto">
+                    {/* Index Tag Styled in Deep Espresso Contrast */}
+                    <div className="text-xs lg:text-sm font-black tracking-widest text-[#4C2B08] uppercase mb-3 px-3 py-1 bg-[#FFFDF4]/10 rounded-full border border-[#FFFDF4]/15">
+                        [ 2 ]
                     </div>
-                    {/* Title Styled in Pristine Ivory */}
-                    <h2 className="text-3xl lg:text-5xl font-black text-[#FFFDF4] tracking-tight font-Gloock mb-4 lg:mb-6">
+                    {/* Title Styled in Pristine Cream */}
+                    <h2 className="text-3xl lg:text-5xl font-black text-[#FFFDF4] tracking-tight font-Gloock mb-4 lg:mb-6 text-shadow-premium">
                         {title}
                     </h2>
-                    {/* Description Styled in Warm Vanilla */}
+                    {/* Description Styled in High-Contrast Creamy Vanilla */}
                     <ContentManager
                         items={processedDescriptionNodes}
-                        className="text-sm lg:text-base leading-relaxed text-[#D7BDA6] tracking-wide font-light uppercase"
+                        className="text-sm lg:text-base leading-relaxed text-[#FFFDF4]/90 tracking-wide font-medium uppercase text-shadow-premium"
                     />
                 </div>
             </div>
@@ -79,7 +79,7 @@ const HomeMenu: React.FC<Props> = ({
                         <Link
                             key={index}
                             href={`/menu?s=${meal.meta.en?.title.toLowerCase()}`}
-                            className="group relative flex w-full h-[220px] md:h-[320px] lg:h-[400px] overflow-hidden rounded-3xl border border-white/5 shadow-xl transition-all duration-500 hover:border-[#FFB03A]/40 hover:shadow-2xl hover:shadow-[#FFB03A]/5 cursor-pointer"
+                            className="group relative flex w-full h-[220px] md:h-[320px] lg:h-[400px] overflow-hidden rounded-3xl border border-[#FFFDF4]/10 shadow-[0_15px_30px_rgba(76,43,8,0.25)] transition-all duration-500 hover:border-[#FFB03A]/40 hover:shadow-[0_25px_50px_rgba(76,43,8,0.4)] cursor-pointer"
                         >
                             {meal.meta.en && (
                                 <div className="relative w-full h-full flex items-center justify-center">
@@ -92,13 +92,13 @@ const HomeMenu: React.FC<Props> = ({
                                         />
                                     </div>
 
-                                    {/* 2. Cozy, Dynamic Vignette Overlay */}
-                                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-[#1C0F03] via-[#4C2B08]/65 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
+                                    {/* 2. Cozy, Dynamic Vignette Overlay blending from our deep Mocca into a dark smoke */}
+                                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-[#4C2B08] via-[#84593D]/60 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
 
                                     {/* 3. Central Interactive Copy Blocks */}
                                     <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-[680px] mx-auto transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
                                         {/* Dynamic category icon or bullet */}
-                                        <span className="text-xs font-bold uppercase tracking-widest text-[#FFB03A] mb-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                                        <span className="text-xs font-bold uppercase tracking-widest text-[#FFB03A] mb-2 opacity-90 group-hover:opacity-100 transition-opacity">
                                             ✦ Signature Menu ✦
                                         </span>
                                         {/* Plate Title */}
@@ -108,11 +108,11 @@ const HomeMenu: React.FC<Props> = ({
                                         {/* Plate Description */}
                                         <ContentManager
                                             items={processedMealDescription}
-                                            className="text-xs md:text-sm lg:text-base leading-relaxed tracking-wide text-[#D7BDA6]/90 uppercase font-light"
+                                            className="text-xs md:text-sm lg:text-base leading-relaxed tracking-wide text-[#FFFDF4]/90 uppercase font-light"
                                         />
                                         
-                                        {/* Hidden/Hover Button Element */}
-                                        <div className="mt-4 flex items-center gap-1.5 text-xs font-black text-white bg-[#AB7743] hover:bg-[#966535] px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
+                                        {/* Hover Action Button Element */}
+                                        <div className="mt-4 flex items-center gap-1.5 text-xs font-black text-white bg-[#AB7743] hover:bg-[#966535] px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 shadow-md">
                                             <span>Explore Menu</span>
                                             <span className="text-sm font-normal">→</span>
                                         </div>
@@ -130,4 +130,3 @@ const HomeMenu: React.FC<Props> = ({
 };
 
 export default HomeMenu;
-
