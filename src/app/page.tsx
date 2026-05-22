@@ -1,4 +1,5 @@
 import HomeHero from '@/components/home-page/Hero';
+import HomeServices from '@/components/home-page/Services';
 import HomeMenu from '@/components/home-page/Menu';
 import HomeSeasons from '@/components/home-page/Seasons';
 import HomeAmbience from '@/components/home-page/Ambience';
@@ -28,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
     }
 
     const homePageMeta = homePageEntry.meta.en as HomePageEntryMetaItem;
-    const pageTitle = `${homePageMeta.seo?.title || homePageMeta.title} - Tastyyy`;
+    const pageTitle = `${homePageMeta.seo?.title || homePageMeta.title} - Cravenest`;
 
     return {
         title: pageTitle,
@@ -59,6 +60,7 @@ const HomePage: React.FC = async () => {
 
     return (
         <div>
+            {/* 1. Hero Section */}
             <HomeHero
                 title={homePageMeta.hero_title}
                 open_time={homePageMeta.hero_open_time}
@@ -67,6 +69,11 @@ const HomePage: React.FC = async () => {
                 description={homePageMeta.description}
                 bcmsConfig={bcmsPublic.getConfig()}
             />
+
+            {/* 2. Brand Services (Inserted immediately after Hero as requested) */}
+            <HomeServices />
+
+            {/* 3. Menus, Seasons, & Specials */}
             <HomeMenu
                 title={homePageMeta.menu_title}
                 description={homePageMeta.menu_description}
@@ -108,3 +115,4 @@ const HomePage: React.FC = async () => {
 };
 
 export default HomePage;
+
