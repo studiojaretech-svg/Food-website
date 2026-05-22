@@ -18,8 +18,8 @@ interface Props {
     bcmsConfig: ClientConfig;
 }
 
-// Dynamically extract the exact type definition of a BCMS rich-text content node
-type BCMSNode = typeof open_time.nodes[number];
+// Dynamically extract the exact type definition of a BCMS rich-text content node directly from the Props interface
+type BCMSNode = Props['open_time']['nodes'][number];
 
 const HomeHero: React.FC<Props> = ({
     title,
@@ -188,7 +188,7 @@ const HomeHero: React.FC<Props> = ({
                             </h1>
                         </div>
 
-                        {/* Clean descriptions with "Tastyyy" text replaced, styled in premium italic editorial Gloock serif */}
+                        {/* Clean descriptions styled in premium italic editorial Gloock serif */}
                         <div className="text-lg md:text-xl text-[#FFFDF4]/95 leading-relaxed font-normal font-Gloock italic tracking-wide max-w-2xl animate-reveal-2 text-shadow-premium">
                             {description.map((item, index) => {
                                 const processedNodes = replaceTextInNodes((item.text?.nodes || []) as BCMSNode[]);
@@ -222,7 +222,7 @@ const HomeHero: React.FC<Props> = ({
 
                         {/* Category Shortcut Ribbon (Sleek dark cards with white text) */}
                         <div className="pt-6 border-t border-white/20 animate-reveal-3">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-[#FF9130] mb-3 text-shadow-premium">
+                            <p className="text-[14px] font-black uppercase tracking-widest text-[#FF9130] mb-3 text-shadow-premium">
                                 Jump straight to menus
                             </p>
                             
