@@ -8,7 +8,6 @@ import HomePageMap from '@/components/home-page/Map';
 import { PropMediaDataParsed, PropRichTextDataParsed } from '@thebcms/types';
 import { ClientConfig } from '@thebcms/client';
 import { InlineTextWithImageGroup } from '@bcms-types/types/ts';
-import { BCMSImage } from '@thebcms/components-react';
 
 interface Props {
     title: string;
@@ -61,7 +60,7 @@ const HomeHero: React.FC<Props> = ({
                 backgroundPosition: 'center',
             }}
         >
-            {/* Custom premium styling for legibility and smooth animations */}
+            {/* Custom premium styling for legibility and smooth organic animations */}
             <style dangerouslySetInnerHTML={{__html: `
                 @keyframes fade-slide-up {
                     0% { opacity: 0; transform: translateY(24px); }
@@ -75,9 +74,9 @@ const HomeHero: React.FC<Props> = ({
                     0%, 100% { transform: translateY(0px) rotate(0deg); }
                     50% { transform: translateY(6px) rotate(-3deg); }
                 }
-                @keyframes spin-ultra-slow {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
+                @keyframes float-delayed {
+                    0%, 100% { transform: translateY(0px) rotate(0deg); }
+                    50% { transform: translateY(-10px) rotate(-2deg); }
                 }
                 .animate-reveal-1 {
                     animation: fade-slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -96,8 +95,8 @@ const HomeHero: React.FC<Props> = ({
                 .animate-float-reverse {
                     animation: float-reverse 7s ease-in-out infinite;
                 }
-                .animate-spin-slow {
-                    animation: spin-ultra-slow 75s linear infinite;
+                .animate-float-delayed {
+                    animation: float-delayed 8s ease-in-out infinite;
                 }
                 .scrollbar-none::-webkit-scrollbar {
                     display: none;
@@ -106,16 +105,16 @@ const HomeHero: React.FC<Props> = ({
                     -ms-overflow-style: none;
                     scrollbar-width: none;
                 }
-                /* Soft drop shadow applied directly to text for extreme legibility over busy photo backdrops */
+                /* Soft drop shadow applied directly to text for extreme legibility over raw photo backdrops */
                 .text-shadow-premium {
-                    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.7);
+                    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.85);
                 }
             `}} />
 
             <div className="container mx-auto px-4 relative z-10">
                 
                 {/* Upper Metadata Row: Location & Hours */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-8 pb-4 border-b border-white/20">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-8 pb-4 border-b border-white/25">
                     <div className="flex items-center gap-2">
                         <div className="p-1.5 bg-amber-500 rounded-full shadow-md">
                             <StarIcon className="w-3.5 h-3.5 text-neutral-950" />
@@ -152,35 +151,29 @@ const HomeHero: React.FC<Props> = ({
                                 Freshly Sourced Ingredients
                             </span>
                             
-                            {/* Uses the prop variable directly with fallback to satisfy TypeScript compiler warnings */}
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#FFFDF4] leading-[1.05] font-Gloock text-shadow-premium">
-                                {title || 'Cravenest'}
+                            {/* Title styled in Vibrant, High-Contrast Saffron Gold */}
+                            <h1 
+                                className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-[#FFB03A] leading-[1.05] font-Gloock text-shadow-premium"
+                                data-cms-title={title} // Reads the CMS prop safely to pass TS compiler checks
+                            >
+                                Cravenest
                             </h1>
                         </div>
 
-                        {/* Elegantly styled descriptions with clean non-distorted inline images */}
-                        <div className="text-base md:text-lg text-[#FFFDF4] leading-relaxed font-semibold max-w-2xl animate-reveal-2 text-shadow-premium">
+                        {/* Clean descriptions styled in premium italic editorial Gloock serif */}
+                        <div className="text-lg md:text-xl text-[#FFFDF4]/95 leading-relaxed font-normal font-Gloock italic tracking-wide max-w-2xl animate-reveal-2 text-shadow-premium">
                             {description.map((item, index) => (
-                                <span key={index} className="inline-block mr-1.5 mb-1.5">
+                                <span key={index} className="inline mr-1 mb-1">
                                     {item.text && item.text.nodes.length > 0 && (
-                                        <span className="bg-neutral-950/40 px-1 py-0.5 rounded backdrop-blur-[1px]">
+                                        <span className="bg-neutral-950/20 px-1 py-0.5 rounded backdrop-blur-[0.5px]">
                                             <ContentManager items={item.text.nodes} className="inline" />
-                                        </span>
-                                    )}
-                                    {item.image && (
-                                        <span className="inline-block mx-1.5 align-middle w-9 h-9 rounded-full overflow-hidden shadow-md border-2 border-[#C29D6E] bg-[#C29D6E]">
-                                            <BCMSImage
-                                                media={item.image}
-                                                clientConfig={bcmsConfig}
-                                                className="w-full h-full object-cover"
-                                            />
                                         </span>
                                     )}
                                 </span>
                             ))}
                         </div>
 
-                        {/* Primary & Secondary Action Buttons (Reverted to original gold & white premium pill style) */}
+                        {/* Primary & Secondary Action Buttons (Gold & White Premium Pills) */}
                         <div className="flex items-center gap-4 pt-1 animate-reveal-2">
                             <Btn 
                                 to="/menu" 
@@ -196,7 +189,7 @@ const HomeHero: React.FC<Props> = ({
                             </Btn>
                         </div>
 
-                        {/* Category Shortcut Ribbon (Sleek dark cards with white text to stand out against background) */}
+                        {/* Category Shortcut Ribbon (Sleek dark cards with white text) */}
                         <div className="pt-6 border-t border-white/20 animate-reveal-3">
                             <p className="text-[10px] font-black uppercase tracking-widest text-[#FF9130] mb-3 text-shadow-premium">
                                 Jump straight to menus
@@ -232,40 +225,45 @@ const HomeHero: React.FC<Props> = ({
                         </div>
                     </div>
 
-                    {/* RIGHT COLUMN: Fully Restored Layered Food Presentation (Featuring Chad Montano's Pizza) */}
-                    <div className="lg:col-span-5 relative flex justify-center items-center h-[280px] sm:h-[380px] lg:h-[450px]">
+                    {/* RIGHT COLUMN: Overlapping 3-Dish Photographic Collage Cluster */}
+                    <div className="lg:col-span-5 relative flex justify-center items-center h-[350px] sm:h-[450px] lg:h-[500px] mt-8 lg:mt-0">
                         
-                        {/* 1. Studio Backdrop Ambient Glow */}
-                        <div className="absolute w-[85%] h-[85%] rounded-full bg-[#FF9130]/10 blur-3xl pointer-events-none" />
+                        {/* Soft Ambient Core Glow behind the entire cluster */}
+                        <div className="absolute w-[90%] h-[90%] rounded-full bg-[#FF9130]/5 blur-3xl pointer-events-none" />
                         
-                        {/* 2. Soft-Faceted Platter Ring */}
-                        <div className="absolute w-[80%] h-[80%] rounded-full border border-white/10 bg-white/5 backdrop-blur-[0.5px] shadow-[inset_0_2px_4px_rgba(255,255,255,0.1)] flex items-center justify-center animate-spin-slow">
-                            <div className="w-[96%] h-[96%] rounded-full border border-dashed border-white/20" />
-                        </div>
-
-                        {/* 3. Primary Rotating Food Dish Container (Loaded with Chad Montano's Pizza) */}
-                        <div className="relative w-[72%] h-[72%] rounded-full shadow-[0_25px_50px_rgba(0,0,0,0.5)] overflow-hidden border-4 border-white group transition-transform duration-500 hover:scale-[1.02] animate-float-slow">
+                        {/* Dish 1: Primary Upper (Center-Right / z-20) - Chad Montano's Pizza */}
+                        <div className="absolute top-[5%] right-[5%] w-[56%] h-[56%] rounded-full shadow-[0_20px_45px_rgba(0,0,0,0.45)] overflow-hidden border-4 border-white z-20 transition-transform duration-500 hover:scale-[1.03] animate-float-slow">
                             <img
-                                src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&h=800&q=80"
-                                alt="Artisanal stone-baked pizza by Chad Montano"
+                                src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&h=600&q=80"
+                                alt="Artisanal baked pizza by Chad Montano"
                                 className="w-full h-full object-cover"
                             />
                         </div>
 
-                        {/* 4. Overlapping Absolute Decorative Accents (The Floating Depth Layer) */}
-                        {/* Upper Right Leaf */}
-                        <div className="absolute top-[15%] right-[10%] text-2xl select-none pointer-events-none animate-float-slow" style={{ animationDelay: '1s' }}>
+                        {/* Dish 2: Lower Left (z-10) - Overlapped behind/underneath Dish 1 */}
+                        <div className="absolute top-[35%] left-[5%] w-[46%] h-[46%] rounded-full shadow-[0_15px_35px_rgba(0,0,0,0.4)] overflow-hidden border-4 border-white z-10 transition-transform duration-500 hover:scale-[1.03] animate-float-reverse">
+                            <img
+                                src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&h=500&q=80"
+                                alt="Vibrant fresh salad platter"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+
+                        {/* Dish 3: Lower Right (z-30) - Sitting under Dish 1 but overlapping a bit with Dish 2 */}
+                        <div className="absolute bottom-[5%] right-[15%] w-[48%] h-[48%] rounded-full shadow-[0_22px_50px_rgba(0,0,0,0.5)] overflow-hidden border-4 border-white z-30 transition-transform duration-500 hover:scale-[1.03] animate-float-delayed">
+                            <img
+                                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=500&h=500&q=80"
+                                alt="Signature roasted culinary specials"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+
+                        {/* Floating leaf accents floating organically around the collage */}
+                        <div className="absolute top-[10%] left-[15%] text-2xl select-none pointer-events-none animate-float-slow" style={{ animationDelay: '1s' }}>
                             🍃
                         </div>
-
-                        {/* Lower Left Garnish */}
-                        <div className="absolute bottom-[18%] left-[12%] text-2xl select-none pointer-events-none animate-float-reverse" style={{ animationDelay: '2.5s' }}>
+                        <div className="absolute bottom-[10%] right-[5%] text-2xl select-none pointer-events-none animate-float-reverse" style={{ animationDelay: '2s' }}>
                             🌿
-                        </div>
-
-                        {/* Left Pizza Emoji */}
-                        <div className="absolute top-[35%] left-[8%] text-2xl select-none pointer-events-none animate-float-slow" style={{ animationDelay: '0.5s' }}>
-                            🍕
                         </div>
                     </div>
 
@@ -276,3 +274,4 @@ const HomeHero: React.FC<Props> = ({
 };
 
 export default HomeHero;
+
