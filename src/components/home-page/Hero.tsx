@@ -152,9 +152,9 @@ const HomeHero: React.FC<Props> = ({
                                 Freshly Sourced Ingredients
                             </span>
                             
-                            {/* Brand Name Updated to Cravenest */}
+                            {/* Uses the prop variable directly with fallback to satisfy TypeScript compiler warnings */}
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#FFFDF4] leading-[1.05] font-Gloock text-shadow-premium">
-                                Cravenest
+                                {title || 'Cravenest'}
                             </h1>
                         </div>
 
@@ -276,4 +276,3 @@ const HomeHero: React.FC<Props> = ({
 };
 
 export default HomeHero;
-
