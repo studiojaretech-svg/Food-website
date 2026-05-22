@@ -46,26 +46,26 @@ const HomeMenu: React.FC<Props> = ({
     const processedDescriptionNodes = replaceTextInNodes(description.nodes as BCMSNode[]);
 
     return (
-        <section className="relative bg-[#84593D] pt-16 pb-8 lg:pt-24 lg:pb-12 overflow-hidden transition-colors duration-500">
-            {/* Soft Ambient Background Highlights to add beautiful depth inside the Mocca theme */}
-            <div className="absolute top-[10%] left-[-15%] w-[50%] h-[50%] rounded-full bg-[#FFFDF4]/10 blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-[10%] right-[-15%] w-[50%] h-[50%] rounded-full bg-[#FFB03A]/10 blur-[120px] pointer-events-none" />
+        <section className="relative bg-[#D7BDA6] pt-16 pb-8 lg:pt-24 lg:pb-12 overflow-hidden transition-colors duration-500">
+            {/* Soft Ambient Background Highlights to add elegant light-theme depth */}
+            <div className="absolute top-[10%] left-[-15%] w-[50%] h-[50%] rounded-full bg-white/20 blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[10%] right-[-15%] w-[50%] h-[50%] rounded-full bg-[#AB7743]/10 blur-[120px] pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10">
                 {/* Header Segment */}
                 <div className="flex flex-col items-center text-center mb-12 lg:mb-18 max-w-[765px] mx-auto">
-                    {/* Index Tag Styled in Deep Espresso Contrast */}
-                    <div className="text-xs lg:text-sm font-black tracking-widest text-[#4C2B08] uppercase mb-3 px-3 py-1 bg-[#FFFDF4]/10 rounded-full border border-[#FFFDF4]/15">
+                    {/* Index Tag Styled in High-Contrast Espresso with a fine border */}
+                    <div className="text-xs lg:text-sm font-black tracking-widest text-[#4C2B08] uppercase mb-4 px-3 py-1 bg-[#4C2B08]/5 rounded-full border border-[#4C2B08]/15">
                         [ 2 ]
                     </div>
-                    {/* Title Styled in Pristine Cream */}
-                    <h2 className="text-3xl lg:text-5xl font-black text-[#FFFDF4] tracking-tight font-Gloock mb-4 lg:mb-6 text-shadow-premium">
+                    {/* Title Styled in Deep Espresso (Incredible high-end editorial feel) */}
+                    <h2 className="text-3xl lg:text-5xl font-black text-[#4C2B08] tracking-tight font-Gloock mb-4 lg:mb-6">
                         {title}
                     </h2>
-                    {/* Description Styled in High-Contrast Creamy Vanilla */}
+                    {/* Description Styled in Deep Roasted Coffee */}
                     <ContentManager
                         items={processedDescriptionNodes}
-                        className="text-sm lg:text-base leading-relaxed text-[#FFFDF4]/90 tracking-wide font-medium uppercase text-shadow-premium"
+                        className="text-sm lg:text-base leading-relaxed text-[#6D3914]/90 tracking-wide font-medium uppercase"
                     />
                 </div>
             </div>
@@ -79,7 +79,7 @@ const HomeMenu: React.FC<Props> = ({
                         <Link
                             key={index}
                             href={`/menu?s=${meal.meta.en?.title.toLowerCase()}`}
-                            className="group relative flex w-full h-[220px] md:h-[320px] lg:h-[400px] overflow-hidden rounded-3xl border border-[#FFFDF4]/10 shadow-[0_15px_30px_rgba(76,43,8,0.25)] transition-all duration-500 hover:border-[#FFB03A]/40 hover:shadow-[0_25px_50px_rgba(76,43,8,0.4)] cursor-pointer"
+                            className="group relative flex w-full h-[220px] md:h-[320px] lg:h-[400px] overflow-hidden rounded-3xl border border-[#4C2B08]/15 shadow-[0_15px_30px_rgba(76,43,8,0.12)] transition-all duration-500 hover:border-[#4C2B08] hover:shadow-[0_25px_50px_rgba(76,43,8,0.22)] cursor-pointer"
                         >
                             {meal.meta.en && (
                                 <div className="relative w-full h-full flex items-center justify-center">
@@ -93,7 +93,7 @@ const HomeMenu: React.FC<Props> = ({
                                     </div>
 
                                     {/* 2. Cozy, Dynamic Vignette Overlay blending from our deep Mocca into a dark smoke */}
-                                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-[#4C2B08] via-[#84593D]/60 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
+                                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-[#4C2B08] via-[#4C2B08]/60 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
 
                                     {/* 3. Central Interactive Copy Blocks */}
                                     <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-[680px] mx-auto transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
@@ -130,3 +130,4 @@ const HomeMenu: React.FC<Props> = ({
 };
 
 export default HomeMenu;
+
