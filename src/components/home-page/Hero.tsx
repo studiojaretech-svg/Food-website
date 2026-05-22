@@ -56,7 +56,7 @@ const HomeHero: React.FC<Props> = ({
         <section 
             className="relative pt-20 pb-12 md:pt-28 md:pb-20 lg:pt-36 lg:pb-28 overflow-hidden bg-stone-100"
             style={{
-                backgroundImage: "url('/hero.jpg')",
+                backgroundImage: "url('/hero1.jpg')",
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
             }}
