@@ -3,6 +3,7 @@
 import HomePageDivider from '@/components/home-page/Divider';
 import React, { useState, useMemo } from 'react';
 import ContentManager from '@/components/ContentManager';
+import Link from 'next/link'; // Fixed: Imported the Link component
 
 import { A11y } from 'swiper/modules';
 import SwiperCore from 'swiper';
@@ -10,7 +11,6 @@ import { SwiperSlide, Swiper } from 'swiper/react';
 import classnames from 'classnames';
 import { PropRichTextDataParsed } from '@thebcms/types';
 import { ClientConfig } from '@thebcms/client';
-import { BCMSImage } from '@thebcms/components-react';
 import { FoodItemEntryMetaItem } from '@bcms-types/types/ts';
 
 SwiperCore.use([A11y]);
@@ -48,12 +48,12 @@ const HomeSpecials: React.FC<Props> = ({
     title,
     description,
     items,
-    bcmsConfig,
+    bcmsConfig: _bcmsConfig, // Fixed: Added underscore to bypass unused TS checks
 }) => {
     const [activeCategory, setActiveCategory] = useState('ALL');
 
     // Hand-curated, highly aesthetic gourmet packaging assets from Unsplash
-    const luxuryPackages: LuxuryPackage[] = [
+    const luxuryPackages = useMemo<LuxuryPackage[]>(() => [
         {
             id: 1,
             title: 'Classic Celebration Small Chops Tray',
@@ -108,13 +108,13 @@ const HomeSpecials: React.FC<Props> = ({
             badge: 'Limited Edition',
             image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&h=600&q=80',
         },
-    ];
+    ], []);
 
     // Filter package items dynamically based on active filter state
     const filteredPackages = useMemo(() => {
         if (activeCategory === 'ALL') return luxuryPackages;
         return luxuryPackages.filter((pkg) => pkg.category === activeCategory);
-    }, [activeCategory]);
+    }, [activeCategory, luxuryPackages]);
 
     // Helper function to safely replace placeholder text "tastyyy" inside description nodes
     const replaceTextInNodes = (nodes: BCMSNode[]): BCMSNode[] => {
@@ -237,7 +237,7 @@ const HomeSpecials: React.FC<Props> = ({
                                 <h3 className="text-lg md:text-xl font-black font-Gloock text-[#FFFDF4] leading-tight mb-2 uppercase group-hover:text-[#FFB03A] transition-colors">
                                     {pkg.title}
                                 </h3>
-                                {/* Package Description (Revealed beautifully as card raises) */}
+                                {/* Package Description */}
                                 <p className="text-xs text-[#D7BDA6] font-light leading-relaxed mb-4 line-clamp-2 group-hover:line-clamp-none transition-all duration-500">
                                     {pkg.description}
                                 </p>
