@@ -2,6 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 
 const Footer: React.FC = async () => {
+    // Rebranded nav categories: removed Tastyyy emails and added Cravenest links
     const nav = [
         {
             title: 'Connect',
@@ -24,12 +25,12 @@ const Footer: React.FC = async () => {
             title: 'Get in touch',
             items: [
                 {
-                    label: '(+1) 812 9232 823',
-                    href: 'tel:+18129231823',
+                    label: '(+234) 812 9232 823',
+                    href: 'tel:+2348129232823',
                 },
                 {
-                    label: 'tastyyy@mail.com',
-                    href: 'mailto:tastyyy@mail.com',
+                    label: 'hello@cravenest.com',
+                    href: 'mailto:hello@cravenest.com',
                 },
             ],
         },
@@ -62,21 +63,25 @@ const Footer: React.FC = async () => {
     ];
 
     return (
-        <footer className="bg-appText py-10 md:py-12">
-            <div className="container">
-                <div className="md:grid md:grid-cols-[auto,1fr]">
-                    <p className="text-sm leading-[1.3] uppercase tracking-[-0.41px] text-appGray-500 text-center mb-8 md:text-base md:leading-[1.3] md:text-left">
-                        California 166166,
+        <footer className="bg-appText py-12 md:py-16">
+            <div className="container mx-auto px-4">
+                <div className="grid grid-cols-1 md:grid-cols-[auto,1fr] gap-8 md:gap-16 items-start">
+                    
+                    {/* Rebranded Localized Nigerian Address block */}
+                    <p className="text-sm leading-relaxed uppercase tracking-wide text-appGray-500 text-center md:text-left font-medium">
+                        Plot 14, Block III,
                         <br />
-                        quai de Stalingrad
+                        Wole Ariyo Street, Lekki Phase 1,
                         <br />
-                        92130 Issy-Les-Moulineaux
+                        Lagos State, Nigeria.
                     </p>
-                    <nav className="grid grid-cols-[repeat(2,auto)] justify-between gap-x-12 gap-y-8 mx-auto mb-10 max-md:max-w-[225px] md:mb-20 lg:grid-cols-[repeat(4,auto)] lg:gap-20 xl:gap-[128px]">
+
+                    {/* Footer Nav Links */}
+                    <nav className="grid grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-8 justify-between max-md:max-w-[280px] mx-auto md:ml-auto md:mr-0">
                         {nav.map((col, index) => {
                             return (
-                                <div key={index} className="footer--nav-col">
-                                    <div className="text-sm leading-none text-white mb-3.5 md:text-lg md:leading-none">
+                                <div key={index} className="footer--nav-col text-left">
+                                    <div className="text-sm font-black tracking-widest uppercase text-white mb-3.5">
                                         {col.title}
                                     </div>
                                     <ul className="grid grid-cols-1 gap-3">
@@ -95,7 +100,7 @@ const Footer: React.FC = async () => {
                                                                 ? '_blank'
                                                                 : '_self'
                                                         }
-                                                        className="hover:underline focus-visible:underline"
+                                                        className="text-xs font-semibold hover:text-white transition-colors uppercase tracking-wider"
                                                     >
                                                         {item.label}
                                                     </Link>
@@ -108,21 +113,16 @@ const Footer: React.FC = async () => {
                         })}
                     </nav>
                 </div>
-                <div className="flex flex-col items-center text-center md:flex-row md:justify-between">
-                    <a
-                        href="https://thebcms.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center max-md:mb-[14px]"
-                    >
-                        <span className="text-sm leading-none tracking-[-0.41px] text-appBody mr-2 md:text-base md:leading-none md:mr-3">
-                            Powered by
+
+                {/* Bottom Row - Removed all BCMS branding, powered blocks, and replaced with clean Cravenest metadata */}
+                <div className="flex flex-col md:flex-row justify-between items-center pt-10 mt-10 border-t border-white/5 gap-4">
+                    <div className="flex items-center">
+                        <span className="text-sm font-black tracking-widest uppercase text-white font-Gloock">
+                            CRA<span className="text-[#FFB03A]">V</span>ENEST
                         </span>
-                        <img src="/logo.png" className="w-[55px] md:w-[83px]" />
-                    </a>
-                    <div className="text-xs leading-none text-appGray-500 md:text-base md:leading-none md:text-appBody">
-                        &copy; {new Date().getFullYear()} BCMS. All rights
-                        reserved
+                    </div>
+                    <div className="text-[10px] sm:text-xs uppercase tracking-widest text-appGray-500 font-bold">
+                        &copy; {new Date().getFullYear()} Cravenest. All rights reserved.
                     </div>
                 </div>
             </div>
@@ -131,3 +131,4 @@ const Footer: React.FC = async () => {
 };
 
 export default Footer;
+

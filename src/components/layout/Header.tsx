@@ -1,9 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import MenuIcon from '@/assets/icons/menu.svg';
-import XIcon from '@/assets/icons/x.svg';
-import Logo from '@/assets/icons/logo.svg';
 import Link from 'next/link';
 import classNames from 'classnames';
 import Btn from '../Btn';
@@ -12,6 +9,7 @@ const Header: React.FC = () => {
     const navItemsDOM = useRef<HTMLDivElement | null>(null);
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
 
+    // Rebranded navigation links: changed "Events" to "Order"
     const nav = [
         {
             label: 'Home',
@@ -22,7 +20,7 @@ const Header: React.FC = () => {
             href: '/menu',
         },
         {
-            label: 'Events',
+            label: 'Order',
             href: '/events',
         },
         {
@@ -52,86 +50,88 @@ const Header: React.FC = () => {
     }, [showMobileMenu]);
 
     return (
-        <header className="relative z-50" ref={navItemsDOM}>
+        <header className="relative z-50 bg-[#D7BDA6] py-3 shadow-[0_4px_20px_rgba(76,43,8,0.06)] border-b border-[#4C2B08]/5 mb-4 lg:mb-8 transition-colors duration-500">
             <div className="relative z-10 container mx-auto px-4">
-                <nav className="relative flex items-center justify-between pt-6 lg:pt-8">
-                    {/* Brand Identity / Logo Wrapper */}
+                <nav className="relative flex items-center justify-between pt-2">
+                    {/* Premium Cravenest Custom Text Logo with Gold Saffron accent */}
                     <Link
                         href="/"
-                        className="flex md:flex-1"
-                        aria-label="Home page"
+                        className="flex md:flex-1 items-center select-none"
+                        aria-label="Cravenest Home"
                     >
-                        <div
-                            className={classNames(
-                                'w-[60px] md:w-[101px] flex items-center justify-start text-current transition-all duration-300',
-                                {
-                                    'max-md:grayscale-0 max-md:brightness-[0.2] max-md:invert-0':
-                                        showMobileMenu,
-                                }
-                            )}
-                        >
-                            <Logo />
-                        </div>
+                        <span className="text-xl md:text-2xl font-black font-Gloock uppercase tracking-[0.18em] text-[#4C2B08]">
+                            CRA<span className="text-[#FFB03A] drop-shadow-[0_0_8px_rgba(255,176,58,0.4)] transition-all duration-300">V</span>ENEST
+                        </span>
                     </Link>
 
-                    {/* Navigation Menu */}
+                    {/* Navigation Items - Colored in Deep Espresso for high-contrast readability against Vanilla */}
                     <ul
+                        ref={navItemsDOM}
                         className={classNames(
-                            'flex flex-col gap-4 max-md:absolute max-md:left-0 max-md:-bottom-9 max-md:translate-y-full max-md:w-full md:flex-row md:flex-1 md:justify-center lg:gap-8',
+                            'flex flex-col gap-5 max-md:absolute max-md:left-0 max-md:-bottom-[13px] max-md:translate-y-full max-md:w-full max-md:bg-[#D7BDA6] max-md:p-6 max-md:border-t max-md:border-[#4C2B08]/10 max-md:shadow-xl md:flex-row md:flex-1 md:justify-center lg:gap-8 z-50',
                             {
-                                'flex flex-col': showMobileMenu,
+                                'flex': showMobileMenu,
                                 'max-md:hidden': !showMobileMenu,
                             },
                         )}
                     >
                         {nav.map((item, index) => (
-                            <li key={index} className="text-center md:text-left">
+                            <li key={index}>
                                 <Link
                                     href={item.href}
                                     onClick={() => setShowMobileMenu(false)}
-                                    className="text-lg leading-none tracking-[-0.41px] uppercase transition-colors duration-200 hover:text-appAccent md:text-sm font-medium"
+                                    className="text-base md:text-xs lg:text-sm leading-none tracking-[0.05em] uppercase text-[#4C2B08] font-black hover:text-[#AB7743] transition-colors"
                                 >
                                     {item.label}
                                 </Link>
                             </li>
                         ))}
-                        <li className="text-center md:hidden">
+                        <li>
                             <Link
                                 href="/contact"
                                 onClick={() => setShowMobileMenu(false)}
-                                className="text-lg leading-none tracking-[-0.41px] uppercase font-medium"
+                                className="text-base leading-none tracking-[0.05em] uppercase text-[#4C2B08] font-black md:hidden"
                             >
                                 Contact us
                             </Link>
                         </li>
                     </ul>
 
-                    {/* Desktop CTA Button */}
+                    {/* Premium Espresso Styled Contact CTA Button */}
                     <div className="flex justify-end max-md:hidden md:flex-1">
-                        <Btn to="/contact" className="uppercase">
+                        <Btn 
+                            to="/contact" 
+                            className="uppercase bg-[#4C2B08] hover:bg-[#AB7743] text-white px-5 py-2.5 rounded-full text-xs font-black tracking-widest transition-colors shadow-md"
+                        >
                             <span>Contact us</span>
                         </Btn>
                     </div>
 
-                    {/* Mobile Menu Toggle Button */}
+                    {/* Responsive Mobile Hamburgers (Clean Inline SVGs to ensure compile safety) */}
                     <button
-                        className="flex md:hidden p-2 focus:outline-none text-current"
+                        className="flex md:hidden p-2 text-[#4C2B08] hover:text-[#AB7743] transition-colors cursor-pointer"
                         aria-label="Toggle mobile menu"
                         onClick={() => setShowMobileMenu((prev) => !prev)}
                     >
-                        <div className="w-6 h-6 flex items-center justify-center text-current">
-                            {showMobileMenu ? <XIcon /> : <MenuIcon />}
-                        </div>
+                        {showMobileMenu ? (
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        ) : (
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        )}
                     </button>
                 </nav>
             </div>
-
-            {/* Backdrop Mask */}
+            {/* Backdrop cover for mobile menu */}
             {showMobileMenu && (
-                <div className="fixed inset-0 w-screen h-screen bg-appAccent md:hidden" />
+                <div className="fixed inset-0 top-[70px] w-screen h-screen bg-black/15 backdrop-blur-sm md:hidden z-40" />
             )}
         </header>
     );
 };
 
 export default Header;
+
