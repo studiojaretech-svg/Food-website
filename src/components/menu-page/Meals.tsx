@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import ArchWithStar from '@/components/ArchWithStar';
 import ContentManager from '@/components/ContentManager';
 import { ClientConfig } from '@thebcms/client';
@@ -20,111 +20,159 @@ interface Props {
     bcmsConfig: ClientConfig;
 }
 
+// Extracted types to maintain absolute ESLint compiler compliance
+type BCMSNode = MealTypeEntryMetaItem['description']['nodes'][number];
+
 const MenuMeals: React.FC<Props> = ({ meta, meals, foodItems, bcmsConfig }) => {
     const [activeMealType, setActiveMealType] = useState('breakfast');
     const params = useSearchParams();
+    const isFirstRender = useRef(true);
 
+    // Sync state with URL query search parameters safely on mount
     useEffect(() => {
-        if (params.get('s')) {
-            setActiveMealType(params.get('s') as string);
+        if (isFirstRender.current) {
+            const initialTab = params.get('s');
+            if (initialTab) {
+                setActiveMealType(initialTab);
+            }
+            isFirstRender.current = false;
         }
-    }, []);
+    }, [params]);
+
     const activeMealTypeDescription = useMemo(() => {
-        return (
-            meals.find(
-                (mealType) => mealType.title.toLowerCase() === activeMealType,
-            )?.description.nodes || []
+        const foundMeal = meals.find(
+            (mealType) => mealType.title.toLowerCase() === activeMealType.toLowerCase(),
         );
-    }, [activeMealType]);
+        return foundMeal?.description.nodes || [];
+    }, [activeMealType, meals]);
 
     const filteredFoodItems = useMemo(() => {
         return (
             foodItems.filter((item) => {
                 return item.type.find(
-                    (e) => e.meta.en?.title.toLowerCase() === activeMealType,
+                    (e) => e.meta.en?.title.toLowerCase() === activeMealType.toLowerCase(),
                 );
             }) || []
         );
-    }, [activeMealType]);
+    }, [activeMealType, foodItems]);
 
     return (
-        <section className="pt-[108px] pb-10 overflow-hidden md:pb-20 lg:pt-[218px] lg:pb-[120px]">
-            <div className="container max-w-[1198px]">
+        <section className="relative bg-[#D7BDA6] pt-24 pb-20 overflow-hidden lg:pt-36 lg:pb-32 transition-colors duration-500">
+            {/* Subtle background ambient reflections */}
+            <div className="absolute top-[10%] left-[-15%] w-[45%] h-[45%] rounded-full bg-white/20 blur-[130px] pointer-events-none" />
+            <div className="absolute bottom-[10%] right-[-15%] w-[45%] h-[45%] rounded-full bg-[#4C2B08]/5 blur-[130px] pointer-events-none" />
+
+            <div className="container mx-auto px-4 max-w-[1240px] relative z-10">
                 <ArchWithStar />
-                <div className="relative px-4 max-w-[400px] mx-auto lg:max-w-[745px] xl:px-0">
-                    <h1 className="text-xl leading-none font-Gloock uppercase text-center mb-8 lg:text-5xl lg:leading-none">
-                        {meta.title}
+                
+                {/* Header Copy segment */}
+                <div className="relative px-4 max-w-xl lg:max-w-2xl mx-auto text-center mb-16">
+                    {/* Index tag */}
+                    <div className="inline-flex items-center gap-1.5 text-xs font-black tracking-widest text-[#4C2B08] uppercase mb-4 px-3 py-1 bg-[#4C2B08]/5 rounded-full border border-[#4C2B08]/15">
+                        <span>✦ Culinary Offerings ✦</span>
+                    </div>
+
+                    {/* Headline styled in Gloock Serif */}
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-black font-Gloock uppercase text-[#4C2B08] tracking-tight mb-6">
+                        {meta.title || 'Our Premium Menus'}
                     </h1>
-                    <div className="mb-10 lg:mb-20">
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-4 mb-8 md:flex md:items-center md:justify-center lg:gap-4 lg:mb-10">
-                            {meals.map((mealType, index) => (
+
+                    {/* Description styled in warm coffee */}
+                    <div className="text-sm md:text-base leading-relaxed text-[#6D3914]/90 uppercase font-medium max-w-lg mx-auto mb-10">
+                        {activeMealTypeDescription.length > 0 ? (
+                            <ContentManager items={activeMealTypeDescription as BCMSNode[]} />
+                        ) : (
+                            <p>Discover our chef-crafted seasonal select items customized for gourmet standards.</p>
+                        )}
+                    </div>
+
+                    {/* Espresso & Vanilla tab selector buttons */}
+                    <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+                        {meals.map((mealType, index) => {
+                            const isTabActive = mealType.title.toLowerCase() === activeMealType.toLowerCase();
+                            return (
                                 <button
                                     key={index}
                                     className={classNames(
-                                        'flex justify-center w-full px-[18px] py-3 border rounded-[32px] transition-colors duration-300 lg:max-w-max',
+                                        'flex justify-center px-6 py-2.5 border rounded-full transition-all duration-300 text-xs font-black uppercase tracking-widest cursor-pointer shadow-sm hover:scale-[1.02] max-md:w-full max-md:max-w-xs',
                                         {
-                                            'border-appAccent bg-appAccent text-appBody':
-                                                mealType.title.toLowerCase() ===
-                                                activeMealType,
-                                            'border-appText':
-                                                mealType.title.toLowerCase() !==
-                                                activeMealType,
+                                            'border-[#4C2B08] bg-[#4C2B08] text-white': isTabActive,
+                                            'border-[#4C2B08]/20 text-[#4C2B08]/80 hover:text-[#4C2B08] hover:border-[#4C2B08]': !isTabActive,
                                         },
                                     )}
-                                    onClick={() =>
-                                        setActiveMealType(
-                                            mealType.title.toLowerCase(),
-                                        )
-                                    }
+                                    onClick={() => setActiveMealType(mealType.title.toLowerCase())}
                                 >
-                                    <span className="text-xs leading-none tracking-[-0.41px] lg:text-base lg:leading-none">
-                                        {mealType.title}
-                                    </span>
+                                    <span>{mealType.title}</span>
                                 </button>
-                            ))}
-                        </div>
-                        <ContentManager
-                            items={activeMealTypeDescription}
-                            className="text-sm leading-[1.3] tracking-[-0.41px] uppercase text-appGray-700 lg:text-base lg:leading-[1.3]"
-                        />
+                            );
+                        })}
                     </div>
                 </div>
-            </div>
-            {filteredFoodItems.length > 0 ? (
-                <div className="grid grid-cols-1">
-                    {filteredFoodItems.map((item) => (
-                        <div
-                            key={item.slug}
-                            className="relative px-6 py-[42px] md:py-20 lg:py-[130px]"
-                        >
-                            <div className="relative z-10 flex flex-col items-center justify-center text-center h-full">
-                                <h3 className="text-sm leading-none uppercase text-white font-Gloock max-w-[480px] mb-[14px] lg:text-[32px] lg:leading-none lg:mb-[18px]">
-                                    {item.title}
-                                </h3>
-                                <ContentManager
-                                    items={item.description.nodes}
-                                    className="text-sm leading-[1.3] tracking-[-0.41px] uppercase text-appGray-100 max-w-[480px] mb-4 lg:text-base lg:leading-[1.3] lg:mb-6"
-                                />
-                                <div className="px-6 py-[13px] flex max-w-max bg-[#9BA58F] rounded-[32px] text-sm leading-none text-white tracking-[-0.41px] lg:px-[18px] lg:py-3 lg:text-sm lg:leading-none">
-                                    ${item.price}
+
+                {/* THE CARD GRIDS: Customized for a luxury digital layout */}
+                {filteredFoodItems.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                        {filteredFoodItems.map((item, index) => (
+                            <div
+                                key={item.slug || index}
+                                className="group relative bg-[#1a0c02] rounded-3xl overflow-hidden border border-white/5 shadow-[0_15px_30px_rgba(76,43,8,0.12)] hover:border-[#FFB03A]/30 hover:shadow-[0_25px_50px_rgba(76,43,8,0.25)] flex flex-col justify-between h-[380px] sm:h-[420px] transition-all duration-500 cursor-pointer"
+                            >
+                                {/* Photo Container with subtle Zoom */}
+                                <div className="absolute inset-0 w-full h-full">
+                                    <BCMSImage
+                                        media={item.cover_image}
+                                        clientConfig={bcmsConfig}
+                                        className="w-full h-full object-cover transform scale-100 group-hover:scale-[1.03] transition-transform duration-[1000ms] ease-out"
+                                    />
+                                    {/* Cozy vignette overlay */}
+                                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-[#1C0F03] via-[#4C2B08]/40 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
+                                </div>
+
+                                {/* Floating Premium Label Category */}
+                                <div className="absolute top-5 left-5 z-20">
+                                    <span className="text-[9px] font-black tracking-widest uppercase px-3 py-1 bg-[#4C2B08]/90 text-white rounded-full border border-white/10 backdrop-blur-md">
+                                        ✦ {activeMealType} ✦
+                                    </span>
+                                </div>
+
+                                {/* Bottom Typography Details */}
+                                <div className="relative z-10 mt-auto p-6 flex flex-col text-left">
+                                    {/* Platter Title */}
+                                    <h3 className="text-lg md:text-xl font-black font-Gloock text-white leading-tight mb-2 uppercase group-hover:text-[#FFB03A] transition-colors">
+                                        {item.title}
+                                    </h3>
+                                    
+                                    {/* Platter Description */}
+                                    <ContentManager
+                                        items={item.description.nodes}
+                                        className="text-xs text-[#D7BDA6] font-light leading-relaxed mb-4 line-clamp-2 group-hover:line-clamp-none transition-all duration-500"
+                                    />
+
+                                    {/* Price tag & Ordering details */}
+                                    <div className="flex justify-between items-center pt-3 border-t border-white/10 mt-2">
+                                        <div className="flex flex-col">
+                                            <span className="text-[9px] font-bold uppercase tracking-widest text-white/50 leading-none">Price Starting At</span>
+                                            <span className="text-base font-black font-Gloock text-[#FFB03A] mt-1">₦{item.price}</span>
+                                        </div>
+                                        
+                                        {/* Action CTA */}
+                                        <div className="text-[10px] font-black uppercase tracking-wider text-white bg-[#AB7743] hover:bg-[#966535] px-4 py-2 rounded-full shadow-md transition-all group-hover:translate-x-0.5">
+                                            Select
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <BCMSImage
-                                media={item.cover_image}
-                                clientConfig={bcmsConfig}
-                                className="absolute top-0 left-0 w-full h-full object-cover"
-                            />
-                            <div className="absolute top-0 left-0 w-full h-full bg-black/50" />
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <div className="text-sm leading-none tracking-[-0.41px] text-center text-appGray-700 my-20">
-                    No menu item found
-                </div>
-            )}
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-sm leading-none tracking-[-0.41px] text-center text-[#4C2B08]/60 my-28 py-12 bg-[#4C2B08]/5 rounded-3xl border border-[#4C2B08]/10 max-w-md mx-auto">
+                        No culinary items found in this category.
+                    </div>
+                )}
+            </div>
         </section>
     );
 };
 
 export default MenuMeals;
+
