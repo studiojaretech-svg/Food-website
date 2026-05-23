@@ -1,32 +1,62 @@
-import React from 'react';
+import { PropsWithChildren } from 'react';
+import '@/styles/_main.scss'; // Restored original template stylesheet
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { CartProvider } from '@/context/CartContext';
+import { Gloock } from 'next/font/google';
+import { Metadata } from 'next';
+import { CartProvider } from '@/context/CartContext'; // Restores global cart state support
 
-export const metadata = {
-    title: 'Cravenest - Premium Gourmet Food Food Trays & Luxury Hampers',
-    description: 'Bespoke culinary experience customized perfectly for your premium dining requirements in Lagos, Nigeria.',
+const gloock = Gloock({
+    weight: ['400'],
+    subsets: ['latin'],
+    variable: '--font-gloock',
+});
+
+const metaTitle = 'Cravenest'; // Rebranded from 'Tastyyy'
+const metaDescription =
+    'Indulge in Cravenest, offering premium gourmet food trays, bulk party packs, and bespoke luxury hampers hand-styled and delivered fresh in Lagos, Nigeria.';
+const metaImage = '/thumbnail.jpg';
+
+export const metadata: Metadata = {
+    metadataBase: new URL('https://restaurant-starter.thebcms.com'),
+    alternates: {
+        canonical: '/',
+    },
+    title: metaTitle,
+    description: metaDescription,
+    openGraph: {
+        title: metaTitle,
+        description: metaDescription,
+        type: 'website',
+        images: [metaImage],
+        siteName: metaTitle,
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: metaTitle,
+        description: metaDescription,
+        images: [metaImage],
+        site: '@thebcms',
+        creator: '@thebcms',
+    },
 };
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
     return (
         <html lang="en">
-            <body className="antialiased text-appBody bg-[#D7BDA6] min-h-screen flex flex-col justify-between selection:bg-[#FFB03A] selection:text-[#150a02]">
+            <body
+                className={`${gloock.variable} font-Helvetica overflow-x-hidden bg-appBody text-appText`}
+            >
                 <CartProvider>
-                    <div className="app-layout-wrapper flex flex-col justify-between min-h-screen">
+                    <div className="overflow-hidden flex flex-col min-h-screen">
                         <Header />
-                        <main className="flex-grow">
-                            {children}
-                        </main>
+                        <main className="flex flex-col flex-1">{children}</main>
                         <Footer />
                     </div>
                 </CartProvider>
             </body>
         </html>
     );
-}
+};
 
+export default RootLayout;
