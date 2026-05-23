@@ -1,7 +1,7 @@
 'use client';
 
 import HomePageDivider from '@/components/home-page/Divider';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import ContentManager from '@/components/ContentManager';
 import Link from 'next/link';
 
@@ -12,6 +12,7 @@ import classnames from 'classnames';
 import { PropRichTextDataParsed } from '@thebcms/types';
 import { ClientConfig } from '@thebcms/client';
 import { FoodItemEntryMetaItem } from '@bcms-types/types/ts';
+import { useCart } from '@/context/CartContext';
 
 SwiperCore.use([A11y]);
 
@@ -50,7 +51,33 @@ const HomeSpecials: React.FC<Props> = ({
     items,
     bcmsConfig,
 }) => {
+    const { cart, addToCart, removeFromCart } = useCart();
     const [activeCategory, setActiveCategory] = useState('ALL');
+    const [isVisible, setIsVisible] = useState(false);
+    const sectionRef = useRef<HTMLDivElement>(null);
+
+    // Setup Scroll Entrance Intersection Observer
+    useEffect(() => {
+        const currentRef = sectionRef.current;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, []);
 
     // Hand-curated, highly aesthetic gourmet packaging assets from Unsplash
     const luxuryPackages = useMemo<LuxuryPackage[]>(() => [
@@ -61,7 +88,6 @@ const HomeSpecials: React.FC<Props> = ({
             category: 'TRAYS',
             description: 'A loaded, camera-ready tray featuring crispy golden samosas, spring rolls, mini puff puff, barbecue chicken wings, and sweet chili glazed dipping sauces.',
             badge: 'Best Seller',
-            // Ultra-reliable, highly aesthetic finger food basket that renders instantly
             image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&h=600&q=80',
         },
         {
@@ -139,8 +165,49 @@ const HomeSpecials: React.FC<Props> = ({
     // Safely reference CMS items to bypass ESLint unused variables checks
     const hasCMSItems = items && items.length > 0;
 
+    // Highlights EXACTLY the word "special" to be Saffron Gold
+    const renderTaglineWithGold = () => {
+        const rawTagline = "Celebrating a special moment? Let us style your perfect food trays & luxury hampers!";
+        return (
+            <span>
+                {rawTagline.split(' ').map((word, idx) => {
+                    const cleanWord = word.replace(/[?,.!]/g, '').toLowerCase();
+                    const isGoldSpecial = cleanWord === 'special';
+                    return (
+                        <span 
+                            key={idx} 
+                            className={isGoldSpecial ? 'text-[#FFB03A] font-black drop-shadow-[0_0_8px_rgba(255,176,58,0.55)]' : ''}
+                        >
+                            {word}{' '}
+                        </span>
+                    );
+                })}
+            </span>
+        );
+    };
+
+    // Toggles the dynamic package card items within global Cart State
+    const togglePackageInCart = (pkg: LuxuryPackage) => {
+        const cartId = `pkg_${pkg.id}`;
+        const isAdded = cart.some(item => item.id === cartId);
+
+        if (isAdded) {
+            removeFromCart(cartId);
+        } else {
+            const numericPrice = parseInt(pkg.price.replace(/[^0-9]/g, ''), 10) || 0;
+            addToCart({
+                id: cartId,
+                title: pkg.title,
+                price: numericPrice,
+                image: pkg.image,
+                category: pkg.category
+            });
+        }
+    };
+
     return (
         <section 
+            ref={sectionRef}
             className="relative bg-[#241203] py-20 lg:py-32 overflow-hidden transition-colors duration-500"
             data-cms-config={bcmsConfig ? 'active' : 'inactive'} // Safely uses bcmsConfig to resolve unused-vars error
         >
@@ -148,7 +215,12 @@ const HomeSpecials: React.FC<Props> = ({
             <div className="absolute top-[10%] left-[-15%] w-[45%] h-[45%] rounded-full bg-[#FFB03A]/5 blur-[120px] pointer-events-none" />
             <div className="absolute bottom-[10%] right-[-15%] w-[45%] h-[45%] rounded-full bg-[#AB7743]/5 blur-[120px] pointer-events-none" />
 
-            <div className="container mx-auto px-4 relative z-10">
+            {/* Hardware-accelerated Scroll Entrance wrapper */}
+            <div 
+                className={`container mx-auto px-4 relative z-10 transition-all duration-[1000ms] transform ${
+                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+                }`}
+            >
                 
                 {/* Header block with title and packaging filter Swiper */}
                 <div className="flex flex-col items-center mb-12 lg:mb-20 text-center max-w-[850px] mx-auto">
@@ -159,12 +231,12 @@ const HomeSpecials: React.FC<Props> = ({
                         <span className="text-[#FFB03A]">✦</span>
                     </div>
 
-                    {/* Package Section Headline with customized Question Tagline */}
+                    {/* Package Section Headline with Saffron Highlight tagline */}
                     <h2 
                         className="text-2xl md:text-3xl lg:text-5xl font-black text-[#FFFDF4] tracking-tight font-Gloock mb-6 uppercase leading-tight md:leading-[1.1]"
                         data-cms-items-count={hasCMSItems ? items.length : 0} // Safely locks CMS items in DOM state
                     >
-                        {title ? 'Celebrating a special moment? Let us style your perfect food trays & luxury hampers!' : 'Celebrating a special moment? Let us style your perfect food trays & luxury hampers!'}
+                        {renderTaglineWithGold()}
                     </h2>
 
                     {/* Subheading Description - Cleaned up to pass Next.js HTML entity validations */}
@@ -219,61 +291,73 @@ const HomeSpecials: React.FC<Props> = ({
 
                 {/* Packaging Products Display Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                    {filteredPackages.map((pkg, index) => (
-                        <div
-                            key={index}
-                            className="group relative flex flex-col justify-between h-[380px] md:h-[440px] rounded-3xl overflow-hidden border border-white/5 shadow-xl transition-all duration-500 hover:border-[#FFB03A]/40 hover:shadow-2xl cursor-pointer"
-                        >
-                            {/* Product Cover Image with Group Hover zoom */}
-                            <div className="absolute inset-0 w-full h-full">
-                                <img
-                                    src={pkg.image}
-                                    alt={pkg.title}
-                                    className="w-full h-full object-cover transform scale-100 group-hover:scale-[1.03] transition-transform duration-[1000ms] ease-out"
-                                />
-                                {/* Warm shadow overlay */}
-                                <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-[#1C0F03] via-[#4C2B08]/60 to-transparent transition-opacity duration-500 group-hover:opacity-95" />
-                            </div>
+                    {filteredPackages.map((pkg, index) => {
+                        const cartId = `pkg_${pkg.id}`;
+                        const isItemAdded = cart.some(item => item.id === cartId);
 
-                            {/* Floating Custom Package Tag Badge */}
-                            <div className="absolute top-5 left-5 z-20">
-                                <span className="text-[9px] font-black tracking-widest uppercase px-3 py-1 bg-[#4C2B08]/90 text-white rounded-full border border-white/10 backdrop-blur-md">
-                                    {pkg.badge}
-                                </span>
-                            </div>
+                        return (
+                            <div
+                                key={index}
+                                className="group relative flex flex-col justify-between h-[380px] md:h-[440px] rounded-3xl overflow-hidden border border-white/5 shadow-xl transition-all duration-500 hover:border-[#FFB03A]/40 hover:shadow-2xl cursor-pointer"
+                            >
+                                {/* Product Cover Image with Group Hover zoom */}
+                                <div className="absolute inset-0 w-full h-full">
+                                    <img
+                                        src={pkg.image}
+                                        alt={pkg.title}
+                                        className="w-full h-full object-cover transform scale-100 group-hover:scale-[1.03] transition-transform duration-[1000ms] ease-out"
+                                    />
+                                    {/* Warm shadow overlay */}
+                                    <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-[#1C0F03] via-[#4C2B08]/60 to-transparent transition-opacity duration-500 group-hover:opacity-95" />
+                                </div>
 
-                            {/* Bottom Card Copy details */}
-                            <div className="relative z-10 mt-auto p-6 flex flex-col text-left">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-[#FFB03A] mb-1.5">
-                                    ✦ Customized Package ✦
-                                </span>
-                                {/* Package Headline */}
-                                <h3 className="text-lg md:text-xl font-black font-Gloock text-[#FFFDF4] leading-tight mb-2 uppercase group-hover:text-[#FFB03A] transition-colors">
-                                    {pkg.title}
-                                </h3>
-                                {/* Package Description */}
-                                <p className="text-xs text-[#D7BDA6] font-light leading-relaxed mb-4 line-clamp-2 group-hover:line-clamp-none transition-all duration-500">
-                                    {pkg.description}
-                                </p>
+                                {/* Floating Custom Package Tag Badge */}
+                                <div className="absolute top-5 left-5 z-20">
+                                    <span className="text-[9px] font-black tracking-widest uppercase px-3 py-1 bg-[#4C2B08]/90 text-white rounded-full border border-white/10 backdrop-blur-md">
+                                        {pkg.badge}
+                                    </span>
+                                </div>
 
-                                {/* Price tag and action info */}
-                                <div className="flex justify-between items-center pt-3 border-t border-white/10">
-                                    <div className="flex flex-col">
-                                        <span className="text-[9px] font-bold uppercase tracking-widest text-white/50 leading-none">Price Starting At</span>
-                                        <span className="text-base font-black font-Gloock text-[#FFB03A] mt-1">{pkg.price}</span>
+                                {/* Bottom Card Copy details */}
+                                <div className="relative z-10 mt-auto p-6 flex flex-col text-left">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-[#FFB03A] mb-1.5">
+                                        ✦ Customized Package ✦
+                                    </span>
+                                    {/* Package Headline */}
+                                    <h3 className="text-lg md:text-xl font-black font-Gloock text-[#FFFDF4] leading-tight mb-2 uppercase group-hover:text-[#FFB03A] transition-colors">
+                                        {pkg.title}
+                                    </h3>
+                                    {/* Package Description */}
+                                    <p className="text-xs text-[#D7BDA6] font-light leading-relaxed mb-4 line-clamp-2 group-hover:line-clamp-none transition-all duration-500">
+                                        {pkg.description}
+                                    </p>
+
+                                    {/* Price tag and action info */}
+                                    <div className="flex justify-between items-center pt-3 border-t border-white/10">
+                                        <div className="flex flex-col">
+                                            <span className="text-[9px] font-bold uppercase tracking-widest text-white/50 leading-none">Price Starting At</span>
+                                            <span className="text-base font-black font-Gloock text-[#FFB03A] mt-1">{pkg.price}</span>
+                                        </div>
+
+                                        {/* Dynamic Add Tray CTA Trigger connected to global Cart Context */}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                togglePackageInCart(pkg);
+                                            }}
+                                            className={`text-[10px] font-black uppercase tracking-wider text-white rounded-full shadow-md transition-all group-hover:translate-x-0.5 cursor-pointer px-5 py-2.5 ${
+                                                isItemAdded 
+                                                    ? 'bg-emerald-500 hover:bg-emerald-600' 
+                                                    : 'bg-[#AB7743] hover:bg-[#966535]'
+                                            }`}
+                                        >
+                                            {isItemAdded ? '✓ Added' : 'Add Tray'}
+                                        </button>
                                     </div>
-
-                                    {/* Order / Booking Trigger */}
-                                    <Link 
-                                        href="/menu" 
-                                        className="text-[10px] font-black uppercase tracking-wider text-white bg-[#AB7743] hover:bg-[#966535] px-4 py-2 rounded-full shadow-md transition-all group-hover:translate-x-0.5"
-                                    >
-                                        Book Tray
-                                    </Link>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
             </div>
@@ -283,4 +367,3 @@ const HomeSpecials: React.FC<Props> = ({
 };
 
 export default HomeSpecials;
-

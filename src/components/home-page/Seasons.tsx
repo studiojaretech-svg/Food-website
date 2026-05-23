@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ContentManager from '@/components/ContentManager';
 import Link from 'next/link';
 import { ClientConfig } from '@thebcms/client';
 import { PropRichTextDataParsed } from '@thebcms/types';
+import { useCart } from '@/context/CartContext';
 
 interface Props {
     title: string;
@@ -31,9 +32,34 @@ const HomeSeasons: React.FC<Props> = ({
     title,
     description,
 }) => {
+    const { cart, addToCart, removeFromCart } = useCart();
     const [selectedCategory, setSelectedCategory] = useState('Trending');
     const [activeCardId, setActiveCardId] = useState<number | null>(null);
-    const [addedItems, setAddedItems] = useState<number[]>([]);
+    const [isVisible, setIsVisible] = useState(false);
+    const sectionRef = useRef<HTMLDivElement>(null);
+
+    // Setup Scroll Entrance Intersection Observer
+    useEffect(() => {
+        const currentRef = sectionRef.current;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, []);
 
     const categories = ['Trending', 'Traditional Rice', 'Spiced Grills', 'Pastries'];
 
@@ -46,7 +72,6 @@ const HomeSeasons: React.FC<Props> = ({
             price: '₦4,500',
             portion: 'Single Platter',
             badge: 'New',
-            // High-fidelity hot seasoned rice platter
             image: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=400&h=400&q=80',
             ingredients: 'Long-grain parboiled rice, smoky tatashe tomato reduction, golden sweet plantains, bay leaf infusion.',
         },
@@ -86,7 +111,6 @@ const HomeSeasons: React.FC<Props> = ({
             price: '₦3,000',
             portion: '6 pcs Portion',
             badge: 'Hot!',
-            // 100% active, guaranteed high-fidelity gourmet golden crispy samosas
             image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=400&h=400&q=80',
             ingredients: 'Flaky golden triangular pastry shells, spiced minced beef and green pea filling, aromatic garlic seasonings.',
         },
@@ -126,11 +150,22 @@ const HomeSeasons: React.FC<Props> = ({
         ? popularFoods.filter(food => food.id === 1 || food.id === 2 || food.id === 3 || food.id === 8)
         : popularFoods.filter(food => food.category === selectedCategory);
 
-    const toggleCart = (id: number) => {
-        if (addedItems.includes(id)) {
-            setAddedItems(addedItems.filter(item => item !== id));
+    // Integrates local Cart triggers directly with the global Cart State
+    const toggleCart = (food: FoodCard) => {
+        const cartId = `fav_${food.id}`;
+        const isItemAdded = cart.some(item => item.id === cartId);
+
+        if (isItemAdded) {
+            removeFromCart(cartId);
         } else {
-            setAddedItems([...addedItems, id]);
+            const numericPrice = parseInt(food.price.replace(/[^0-9]/g, ''), 10) || 0;
+            addToCart({
+                id: cartId,
+                title: food.name,
+                price: numericPrice,
+                image: food.image,
+                category: food.category
+            });
         }
     };
 
@@ -153,13 +188,43 @@ const HomeSeasons: React.FC<Props> = ({
 
     const processedDescriptionNodes = replaceTextInNodes(description.nodes as BCMSNode[]);
 
+    // Custom Headline Highlights: renders 'FAVOURITES' where ONLY the letter 'I' is styled in saffron gold
+    const renderStyledTitle = () => {
+        return (
+            <span className="flex flex-wrap justify-center gap-x-3">
+                <span className="text-[#FFFDF4]">CUSTOMER</span>
+                <span className="inline-flex">
+                    {'FAVOURITES'.split('').map((char, idx) => {
+                        const isGoldI = char.toUpperCase() === 'I';
+                        return (
+                            <span 
+                                key={idx}
+                                className={isGoldI ? 'text-[#FFB03A] font-black drop-shadow-[0_0_8px_rgba(255,176,58,0.55)]' : 'text-[#FFFDF4]'}
+                            >
+                                {char}
+                            </span>
+                        );
+                    })}
+                </span>
+            </span>
+        );
+    };
+
     return (
-        <section className="relative py-20 lg:py-28 overflow-hidden bg-[#150a02]">
+        <section 
+            ref={sectionRef}
+            className="relative py-20 lg:py-28 overflow-hidden bg-[#150a02]"
+        >
             {/* Soft Ambient Background Highlights */}
             <div className="absolute top-[10%] left-[-15%] w-[45%] h-[45%] rounded-full bg-[#FFB03A]/5 blur-3xl pointer-events-none" />
             <div className="absolute bottom-[10%] right-[-15%] w-[45%] h-[45%] rounded-full bg-[#AB7743]/5 blur-3xl pointer-events-none" />
 
-            <div className="container mx-auto px-4 relative z-10">
+            {/* Hardware-accelerated Scroll Entrance wrapper */}
+            <div 
+                className={`container mx-auto px-4 relative z-10 transition-all duration-[1000ms] transform ${
+                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+                }`}
+            >
                 
                 {/* 1. UPPER HEADER: Fixed with natural document flow layout to prevent absolute tablet collisions */}
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-16 pb-6 border-b border-white/10 w-full">
@@ -189,13 +254,13 @@ const HomeSeasons: React.FC<Props> = ({
                         </div>
                     </div>
 
-                    {/* Center Grid: Title styled statically to prevent absolute rendering on tablets */}
+                    {/* Center Grid: Title styled statically with Saffron I Highlight */}
                     <div className="text-center max-w-lg">
                         <h2 
-                            className="text-3xl lg:text-4xl font-black text-[#FFFDF4] tracking-wider font-Gloock uppercase drop-shadow-sm"
+                            className="text-3xl lg:text-4xl font-black tracking-wider font-Gloock uppercase drop-shadow-sm"
                             data-cms-title={title} // Keeps CMS variable linked to satisfy TS compiler checks
                         >
-                            CUSTOMER FAVOURITES
+                            {renderStyledTitle()}
                         </h2>
                         <ContentManager
                             items={processedDescriptionNodes}
@@ -225,7 +290,8 @@ const HomeSeasons: React.FC<Props> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative mb-16">
                     {filteredFoods.map((food) => {
                         const isHoveredOrHeld = activeCardId === food.id;
-                        const isItemAdded = addedItems.includes(food.id);
+                        const cartId = `fav_${food.id}`;
+                        const isItemAdded = cart.some(item => item.id === cartId);
 
                         return (
                             <div 
@@ -313,11 +379,11 @@ const HomeSeasons: React.FC<Props> = ({
                                             </span>
                                         </div>
 
-                                        {/* Golden / Highlighted Action Button Capsule */}
+                                        {/* Dynamic Add to Cart Dispatch Trigger Button */}
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                toggleCart(food.id);
+                                                toggleCart(food);
                                             }}
                                             className={`flex items-center justify-center rounded-lg px-3.5 py-1.5 transition-all text-[11px] font-black uppercase tracking-wider cursor-pointer shadow-md ${
                                                 isItemAdded 
