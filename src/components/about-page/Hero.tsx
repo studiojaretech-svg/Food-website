@@ -5,7 +5,6 @@ import Btn from '@/components/Btn';
 import { PropMediaDataParsed, PropRichTextDataParsed } from '@thebcms/types';
 import { ClientConfig } from '@thebcms/client';
 import { BCMSImage } from '@thebcms/components-react';
-import AboutUsOutline from '@/assets/icons/about-us-outline.svg';
 
 interface Props {
     title: PropRichTextDataParsed;
@@ -34,7 +33,6 @@ const AboutHero: React.FC<Props> = ({
             <div className="container max-w-[1198px]">
                 <ArchWithStar />
                 <div className="relative px-4 max-w-[400px] mx-auto lg:max-w-[962px] xl:px-0">
-                    <AboutUsOutline className="absolute w-[220px] right-[30px] lg:w-[822px] lg:-right-4 lg:-top-6" />
                     <ContentManager
                         items={title.nodes}
                         className="aboutHero--title relative z-10 text-xl leading-none font-Gloock mb-2 lg:text-[56px] lg:leading-none lg:mb-3"
