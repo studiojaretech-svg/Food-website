@@ -6,7 +6,8 @@ import classNames from 'classnames';
 import Btn from '../Btn';
 
 const Header: React.FC = () => {
-    const navItemsDOM = useRef<HTMLDivElement | null>(null);
+    // Fixed: Changed ref type from HTMLDivElement to HTMLUListElement to match the <ul> element below
+    const navItemsDOM = useRef<HTMLUListElement | null>(null);
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
 
     // Rebranded navigation links: changed "Events" to "Order"
