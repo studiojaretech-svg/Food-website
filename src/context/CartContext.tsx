@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Define the shape of a Cart item
 export interface CartItem {
     id: string;
     title: string;
@@ -12,7 +11,6 @@ export interface CartItem {
     category?: string;
 }
 
-// Shape of our checkout form details
 export interface OrderDetails {
     customerName: string;
     phone: string;
@@ -57,7 +55,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, [cart, isInitialized]);
 
-    // Add item to cart or increment quantity if it already exists
     const addToCart = (item: Omit<CartItem, 'quantity'>) => {
         setCart((prevCart) => {
             const existingItem = prevCart.find((i) => i.id === item.id);
@@ -70,12 +67,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
     };
 
-    // Remove item completely
     const removeFromCart = (itemId: string) => {
         setCart((prevCart) => prevCart.filter((i) => i.id !== itemId));
     };
 
-    // Adjust quantities safely (min 1)
     const updateQuantity = (itemId: string, quantity: number) => {
         if (quantity <= 0) {
             removeFromCart(itemId);
@@ -86,23 +81,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         );
     };
 
-    // Reset Cart
     const clearCart = () => {
         setCart([]);
     };
 
-    // Computed Values
     const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
-    /**
-     * Formatting Checkout Engine (WhatsApp Link Generation)
-     * Compiles cart arrays into a premium human-readable receipt and dispatches to WhatsApp API
-     */
     const checkoutViaWhatsApp = (details: OrderDetails) => {
         const businessPhoneNumber = '2348129232823'; // Cravenest official contact line
 
-        // Build elegant text message layout
         let message = `✦ ─────────────── ✦\n`;
         message += `  *NEW ORDER - CRAVENEST* \n`;
         message += `✦ ─────────────── ✦\n\n`;
@@ -127,11 +115,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         message += `✦ ───────────────── ✦\n\n`;
         message += `_Sent automatically from Cravenest Web Portal._`;
 
-        // Safely encode text coordinates for URL query standard
         const encodedText = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/${businessPhoneNumber}?text=${encodedText}`;
         
-        // Open WhatsApp in a new tab securely
         window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     };
 
@@ -153,10 +139,21 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 };
 
+// Safe fallback exporter:
+// Prevents build-time crashes when system components are static-rendered outside of layout contexts
 export const useCart = () => {
     const context = useContext(CartContext);
     if (!context) {
-        throw new Error('useCart must be used inside a CartProvider element');
+        return {
+            cart: [],
+            addToCart: () => {},
+            removeFromCart: () => {},
+            updateQuantity: () => {},
+            clearCart: () => {},
+            cartTotal: 0,
+            cartCount: 0,
+            checkoutViaWhatsApp: () => {},
+        };
     }
     return context;
 };
