@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import HomePageDivider from '@/components/home-page/Divider';
 import ContentManager from '@/components/ContentManager';
 import { PropRichTextDataParsed } from '@thebcms/types';
@@ -23,12 +23,40 @@ const HomeEvents: React.FC<Props> = ({
     events,
     bcmsConfig,
 }) => {
+    const [isVisible, setIsVisible] = useState(false);
+    const [imageError, setImageError] = useState(false);
+    const sectionRef = useRef<HTMLDivElement>(null);
+
+    // Setup an intersection observer to trigger scroll-driven entrance animations
+    useEffect(() => {
+        const currentRef = sectionRef.current;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                }
+            },
+            { threshold: 0.15 }
+        );
+
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, []);
+
     // Safely reference props to prevent any unused-vars compiler issues
     const hasEvents = events && events.length > 0;
     const hasConfig = !!bcmsConfig;
 
     return (
         <section 
+            ref={sectionRef}
             className="relative bg-[#150a02] py-20 lg:py-32 overflow-hidden transition-colors duration-500"
             data-cms-events={hasEvents ? 'true' : 'false'}
             data-cms-config={hasConfig ? 'active' : 'inactive'}
@@ -72,25 +100,37 @@ const HomeEvents: React.FC<Props> = ({
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
                     
                     {/* LEFT COLUMN: Promotional Copy and matching Caramel/Gold features */}
-                    <div className="lg:col-span-6 flex flex-col space-y-6 text-left">
+                    <div 
+                        className={`lg:col-span-6 flex flex-col space-y-6 text-left transition-all duration-1000 transform ${
+                            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+                        }`}
+                    >
                         {/* Tagline */}
                         <span className="text-xs font-black uppercase tracking-widest text-[#FFB03A]">
                             ✦ Limited Promo Offer ✦
                         </span>
 
-                        {/* Heading */}
-                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#FFFDF4] leading-[1.15] font-Gloock uppercase">
-                            {title || 'Try Our Flame-Grilled Sizzling Platters'}
+                        {/* Custom Promotional Tagline Title */}
+                        <h2 
+                            className="text-3xl md:text-4xl lg:text-5xl font-black text-[#FFFDF4] leading-[1.15] font-Gloock uppercase"
+                            data-cms-title={title}
+                        >
+                            Craving Something Smoky & Bold? Try Our Flame-Grilled Masterpieces!
                         </h2>
 
-                        {/* Description */}
-                        <div className="text-sm md:text-base text-[#D7BDA6]/90 leading-relaxed font-light">
-                            <ContentManager items={description.nodes as BCMSNode[]} />
-                        </div>
+                        {/* Custom short description */}
+                        {description && description.nodes && description.nodes.length > 0 ? (
+                            <div className="text-sm md:text-base text-[#D7BDA6]/90 leading-relaxed font-light">
+                                <ContentManager items={description.nodes as BCMSNode[]} />
+                            </div>
+                        ) : (
+                            <p className="text-sm md:text-base text-[#D7BDA6]/90 leading-relaxed font-light">
+                                Indulge in our carefully curated sizzling trays, seasoned with authentic local spices, slow-grilled to lock in rich, rustic wood-fired flavors.
+                            </p>
+                        )}
 
-                        {/* Promotional Feature Row 1 (Replaces red badges from screenshot with Caramel/Gold theme) */}
+                        {/* Promotional Feature Row 1 */}
                         <div className="flex items-start gap-4 pt-4 border-t border-white/10">
-                            {/* Saffron/Caramel Badge Icon */}
                             <div className="w-12 h-12 rounded-full bg-[#AB7743] flex items-center justify-center text-white shrink-0 shadow-lg border border-[#FFB03A]/20">
                                 <svg className="w-6 h-6 text-[#FFFDF4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343a7.975 7.975 0 010 11.314z" />
@@ -109,7 +149,6 @@ const HomeEvents: React.FC<Props> = ({
 
                         {/* Promotional Feature Row 2 */}
                         <div className="flex items-start gap-4">
-                            {/* Saffron/Caramel Badge Icon */}
                             <div className="w-12 h-12 rounded-full bg-[#AB7743] flex items-center justify-center text-white shrink-0 shadow-lg border border-[#FFB03A]/20">
                                 <svg className="w-6 h-6 text-[#FFFDF4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
@@ -127,18 +166,32 @@ const HomeEvents: React.FC<Props> = ({
                     </div>
 
                     {/* RIGHT COLUMN: Big sizzling food pan with floating red onion rings & jalapeños */}
-                    <div className="lg:col-span-6 relative flex items-center justify-center min-h-[350px] sm:min-h-[450px] lg:min-h-[500px]">
-                        
+                    <div 
+                        className={`lg:col-span-6 relative flex items-center justify-center min-h-[350px] sm:min-h-[450px] lg:min-h-[500px] transition-all duration-[1200ms] delay-200 transform ${
+                            isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                        }`}
+                    >
                         {/* Ambient hot core back-glow */}
                         <div className="absolute w-[80%] h-[80%] rounded-full bg-[#FFB03A]/10 blur-3xl pointer-events-none" />
 
-                        {/* CENTRAL SIZZLING FOOD PAN */}
-                        <div className="relative w-[280px] h-[280px] sm:w-[380px] sm:h-[380px] md:w-[420px] md:h-[420px] rounded-full border-4 border-white/5 shadow-2xl overflow-hidden animate-pan-sizzle z-10">
-                            <img 
-                                src="https://images.unsplash.com/photo-1543083477-4f785ae82753?auto=format&fit=crop&w=600&h=600&q=80" 
-                                alt="Sizzling premium skillet platter" 
-                                className="w-full h-full object-cover"
-                            />
+                        {/* CENTRAL SIZZLING FOOD PAN WITH ROBUST FALLBACK STATE */}
+                        <div className="relative w-[280px] h-[280px] sm:w-[380px] sm:h-[380px] md:w-[420px] md:h-[420px] rounded-full border-4 border-white/5 shadow-2xl overflow-hidden animate-pan-sizzle z-10 bg-neutral-900 flex items-center justify-center">
+                            {!imageError ? (
+                                <img 
+                                    src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&h=600&q=80" 
+                                    alt="Sizzling premium skillet platter" 
+                                    className="w-full h-full object-cover"
+                                    onError={() => setImageError(true)} // Triggers clean fallback state if link breaks
+                                />
+                            ) : (
+                                // Premium, custom styled vector illustration if CDN restrictions block the image
+                                <div className="w-full h-full bg-gradient-to-tr from-[#241203] to-[#4C2B08] flex flex-col items-center justify-center p-6">
+                                    <svg className="w-24 h-24 text-[#FFB03A] mb-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 2v4m0 14v2M4 12H2m20 0h-2m-2.05-6.36l-2.83 2.83m-5.66 5.66l-2.83 2.83M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span className="text-sm font-black tracking-widest text-[#FFFDF4] uppercase">Sizzling Embers Platter</span>
+                                </div>
+                            )}
                             {/* Inner ambient smoke overlay */}
                             <div className="absolute inset-0 bg-black/15 mix-blend-overlay" />
                         </div>
@@ -162,11 +215,8 @@ const HomeEvents: React.FC<Props> = ({
                         {/* FLOATING GREEN JALAPEÑO SLICE 1 (Bottom-Left) */}
                         <div className="absolute bottom-[8%] left-[8%] w-14 h-14 sm:w-16 sm:h-16 animate-pepper z-20 pointer-events-none select-none filter drop-shadow-xl">
                             <svg viewBox="0 0 100 100" fill="none" className="w-full h-full">
-                                {/* Outer pepper rim */}
                                 <circle cx="50" cy="50" r="45" fill="#2E7D32" stroke="#1B5E20" strokeWidth="6" />
-                                {/* Inner flesh */}
                                 <circle cx="50" cy="50" r="32" fill="#81C784" />
-                                {/* Spiced seeds */}
                                 <circle cx="42" cy="42" r="5" fill="#FFF" />
                                 <circle cx="58" cy="42" r="5" fill="#FFF" />
                                 <circle cx="50" cy="62" r="5" fill="#FFF" />
@@ -194,4 +244,5 @@ const HomeEvents: React.FC<Props> = ({
 };
 
 export default HomeEvents;
+
 
