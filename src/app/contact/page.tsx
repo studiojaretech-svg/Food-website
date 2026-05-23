@@ -24,7 +24,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
     const contactPageMeta = contactPageEntry.meta
         .en as ContactPageEntryMetaItem;
-    const pageTitle = `${contactPageMeta.seo?.title || contactPageMeta.title} - Tastyyy`;
+    
+    // Rebranded "Tastyyy" metadata reference to "Cravenest"
+    const pageTitle = `${contactPageMeta.seo?.title || contactPageMeta.title} - Cravenest`;
 
     return {
         title: pageTitle,
@@ -52,18 +54,26 @@ const ContactPage: React.FC = async () => {
 
     return (
         <div>
-            <section className="pt-[108px] pb-10 overflow-hidden md:pb-20 lg:pt-[218px] lg:pb-[120px]">
-                <div className="container max-w-[1198px]">
+            {/* Global style injector to force the entire layout wrapper and document body to match the Vanilla backdrop */}
+            <style dangerouslySetInnerHTML={{__html: `
+                body, html, main, #__next, .app-layout-wrapper {
+                    background-color: #D7BDA6 !important;
+                }
+            `}} />
+
+            <section className="pt-[108px] pb-10 overflow-hidden md:pb-20 lg:pt-[218px] lg:pb-[120px] bg-[#D7BDA6]">
+                <div className="container max-w-[1198px] mx-auto">
                     <ArchWithStar />
                     <div className="relative px-4 max-w-[400px] mx-auto lg:max-w-[560px] xl:px-0">
-                        <h1 className="text-xl leading-none font-Gloock uppercase text-center mb-8 lg:text-5xl lg:leading-none lg:mb-20">
+                        {/* Title styled in high-contrast deep Espresso */}
+                        <h1 className="text-xl leading-none font-Gloock uppercase text-center mb-8 lg:text-5xl lg:leading-none lg:mb-20 text-[#4C2B08]">
                             {contactPageMeta.title}
                         </h1>
                         <ContentManager
                             items={contactPageMeta.description.nodes}
-                            className="text-sm leading-[1.3] tracking-[-0.41px] uppercase text-center text-appGray-700 mb-8 lg:text-base lg:leading-[1.3] lg:mb-12"
+                            className="text-sm leading-[1.3] tracking-[-0.41px] uppercase text-center text-[#4C2B08]/80 mb-8 lg:text-base lg:leading-[1.3] lg:mb-12"
                         />
-                        <div className="bg-[#E5E4DA] rounded-2xl p-4 mb-8 lg:mb-10">
+                        <div className="bg-[#4C2B08]/10 rounded-2xl p-4 mb-8 lg:mb-10">
                             <BCMSImage
                                 media={contactPageMeta.map_image}
                                 clientConfig={bcmsPublic.getConfig()}
@@ -72,7 +82,7 @@ const ContactPage: React.FC = async () => {
                         </div>
                         <Btn
                             to="https://www.google.com/maps"
-                            className="uppercase max-w-max mx-auto"
+                            className="uppercase max-w-max mx-auto bg-[#4C2B08] hover:bg-[#AB7743] text-white border-none rounded-full px-8 py-4 font-black tracking-widest transition-colors"
                         >
                             <span>Open maps</span>
                         </Btn>
@@ -84,3 +94,4 @@ const ContactPage: React.FC = async () => {
 };
 
 export default ContactPage;
+
