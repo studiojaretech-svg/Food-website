@@ -338,12 +338,18 @@ const HomeSpecials: React.FC<Props> = ({
                                             <span className="text-base font-black font-Gloock text-[#FFB03A] mt-1">{pkg.price}</span>
                                         </div>
 
-                                        {/* Dynamic Add Tray CTA Trigger connected to global Cart Context */}
+                                        {/* Dynamic Add Tray CTA Trigger with Touch-Isolation */}
                                         <button
                                             type="button"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 togglePackageInCart(pkg);
+                                            }}
+                                            onTouchStart={(e) => {
+                                                e.stopPropagation(); // Prevents parent hover/tap active state interference
+                                            }}
+                                            onTouchEnd={(e) => {
+                                                e.stopPropagation(); // Prevents parent hover/tap active state interference
                                             }}
                                             className={`text-[10px] font-black uppercase tracking-wider text-white rounded-full shadow-md transition-all group-hover:translate-x-0.5 cursor-pointer px-5 py-2.5 ${
                                                 isItemAdded 
@@ -367,3 +373,4 @@ const HomeSpecials: React.FC<Props> = ({
 };
 
 export default HomeSpecials;
+

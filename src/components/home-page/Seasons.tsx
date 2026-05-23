@@ -379,11 +379,18 @@ const HomeSeasons: React.FC<Props> = ({
                                             </span>
                                         </div>
 
-                                        {/* Dynamic Add to Cart Dispatch Trigger Button */}
+                                        {/* Dynamic Add to Cart Dispatch Trigger Button with Touch-Isolation */}
                                         <button
+                                            type="button"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 toggleCart(food);
+                                            }}
+                                            onTouchStart={(e) => {
+                                                e.stopPropagation(); // Prevents parent hover card scaling mid-tap
+                                            }}
+                                            onTouchEnd={(e) => {
+                                                e.stopPropagation(); // Prevents parent hover card scaling mid-tap
                                             }}
                                             className={`flex items-center justify-center rounded-lg px-3.5 py-1.5 transition-all text-[11px] font-black uppercase tracking-wider cursor-pointer shadow-md ${
                                                 isItemAdded 
