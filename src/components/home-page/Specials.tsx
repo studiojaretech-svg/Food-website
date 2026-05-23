@@ -61,7 +61,8 @@ const HomeSpecials: React.FC<Props> = ({
             category: 'TRAYS',
             description: 'A loaded, camera-ready tray featuring crispy golden samosas, spring rolls, mini puff puff, barbecue chicken wings, and sweet chili glazed dipping sauces.',
             badge: 'Best Seller',
-            image: 'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&h=600&q=80',
+            // Ultra-reliable, highly aesthetic finger food basket that renders instantly
+            image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&h=600&q=80',
         },
         {
             id: 2,
@@ -150,23 +151,33 @@ const HomeSpecials: React.FC<Props> = ({
             <div className="container mx-auto px-4 relative z-10">
                 
                 {/* Header block with title and packaging filter Swiper */}
-                <div className="flex flex-col items-center mb-12 lg:mb-20 text-center max-w-[765px] mx-auto">
-                    {/* Index Tag */}
-                    <div className="text-xs lg:text-sm font-black tracking-widest text-[#FFB03A] uppercase mb-4 px-3 py-1 bg-[#4C2B08]/40 rounded-full border border-[#B7957F]/15">
-                        [ 4 ]
+                <div className="flex flex-col items-center mb-12 lg:mb-20 text-center max-w-[850px] mx-auto">
+                    {/* Index Tag Wrapper - Styled in Saffron Gold with diamond accents */}
+                    <div className="flex items-center gap-2 text-xs lg:text-sm font-black tracking-widest text-[#FFB03A] uppercase mb-4 px-3.5 py-1.5 bg-[#4C2B08]/60 rounded-full border border-[#FFB03A]/30">
+                        <span className="text-[#FFB03A]">✦</span>
+                        <span>[ 4 ] Premium Packages</span>
+                        <span className="text-[#FFB03A]">✦</span>
                     </div>
-                    {/* Package Section Headline */}
+
+                    {/* Package Section Headline with customized Question Tagline */}
                     <h2 
-                        className="text-3xl lg:text-5xl font-black text-[#FFFDF4] tracking-tight font-Gloock mb-4 lg:mb-6"
+                        className="text-2xl md:text-3xl lg:text-5xl font-black text-[#FFFDF4] tracking-tight font-Gloock mb-6 uppercase leading-tight md:leading-[1.1]"
                         data-cms-items-count={hasCMSItems ? items.length : 0} // Safely locks CMS items in DOM state
                     >
-                        {title || 'GOURMET PACKAGES & HAMPERS'}
+                        {title ? 'Celebrating a special moment? Let us style your perfect food trays & luxury hampers!' : 'Celebrating a special moment? Let us style your perfect food trays & luxury hampers!'}
                     </h2>
+
                     {/* Subheading Description */}
-                    <ContentManager
-                        items={processedDescriptionNodes}
-                        className="text-sm lg:text-base leading-relaxed text-[#D7BDA6] tracking-wide font-light uppercase mb-8 lg:mb-12"
-                    />
+                    {processedDescriptionNodes.length > 0 ? (
+                        <ContentManager
+                            items={processedDescriptionNodes}
+                            className="text-sm lg:text-base leading-relaxed text-[#D7BDA6] tracking-wide font-light uppercase mb-8 lg:mb-12"
+                        />
+                    ) : (
+                        <p className="text-sm lg:text-base leading-relaxed text-[#D7BDA6] tracking-wide font-light uppercase mb-8 lg:mb-12 max-w-[760px]">
+                            Why serve ordinary meals when you can make a statement? Whether you're hosting an intimate party, gifting a loved one, or setting up a family feast, our camera-ready food trays and luxury gift baskets are hand-styled to steal the show.
+                        </p>
+                    )}
 
                     {/* Packaging Category Selector Swiper */}
                     <Swiper
