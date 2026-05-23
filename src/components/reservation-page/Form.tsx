@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import ArchWithStar from '@/components/ArchWithStar';
-import Btn from '@/components/Btn';
 import FormText from './Text';
 import classNames from 'classnames';
 import Link from 'next/link';
@@ -198,26 +197,27 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                                     </svg>
                                 )}
                             </div>
-                            <div className="text-xs leading-[1.2] tracking-[-0.41px] text-[#4C2B08]/80 lg:text-base lg:leading-[1.2]">
+                            <div className="text-xs leading-[1.2] tracking-[-0.41px] text-[#4C2B08]/85 lg:text-base lg:leading-[1.2] font-medium">
                                 By submitting this form, you confirm you have
                                 read and understood how Cravenest processes your
                                 personal data for the purpose of making a
                                 reservation and in accordance with the terms of
                                 the{' '}
-                                <Link href="/" className="underline text-[#4C2B08] font-bold">
+                                <Link href="/" className="underline text-[#4C2B08] font-black">
                                     Privacy Notice
                                 </Link>
                                 .
                             </div>
                         </label>
-                        <Btn
-                            theme="accent"
-                            size="lg"
-                            className="justify-center w-full col-span-2 bg-[#4C2B08] hover:bg-[#AB7743] text-white border-none rounded-full py-4 font-black tracking-widest uppercase transition-colors"
+                        
+                        {/* Native button styled cleanly to prevent double layered background circles */}
+                        <button
+                            type="button"
+                            className="justify-center w-full col-span-2 bg-[#4C2B08] hover:bg-[#AB7743] text-white rounded-full py-4.5 font-black tracking-widest uppercase transition-all duration-300 shadow-md cursor-pointer hover:scale-[1.01] active:scale-[0.99] text-sm lg:text-base"
                             onClick={() => handleFormSubmit()}
                         >
-                            <span>Submit your reservation</span>
-                        </Btn>
+                            Submit your reservation
+                        </button>
                     </form>
                 </div>
             </div>
@@ -226,3 +226,4 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
 };
 
 export default ReservationForm;
+
