@@ -91,11 +91,11 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
     };
 
     return (
-        <section className="pt-[108px] pb-10 overflow-hidden md:pb-20 lg:pt-[218px] lg:pb-[120px]">
+        <section className="pt-[108px] pb-10 overflow-hidden md:pb-20 lg:pt-[218px] lg:pb-[120px] bg-[#D7BDA6]">
             <div className="container max-w-[1198px]">
                 <ArchWithStar />
                 <div className="relative px-4 max-w-[400px] mx-auto lg:max-w-[808px] xl:px-0">
-                    <h1 className="text-xl leading-none font-Gloock uppercase text-center mb-10 lg:text-5xl lg:leading-none lg:mb-14">
+                    <h1 className="text-xl leading-none font-Gloock uppercase text-center mb-10 lg:text-5xl lg:leading-none lg:mb-14 text-[#4C2B08]">
                         {title}
                     </h1>
                     <form
@@ -198,13 +198,13 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                                     </svg>
                                 )}
                             </div>
-                            <div className="text-xs leading-[1.2] tracking-[-0.41px] text-[#665E5E] lg:text-base lg:leading-[1.2]">
+                            <div className="text-xs leading-[1.2] tracking-[-0.41px] text-[#4C2B08]/80 lg:text-base lg:leading-[1.2]">
                                 By submitting this form, you confirm you have
-                                read and understood how Tastyyy processes your
+                                read and understood how Cravenest processes your
                                 personal data for the purpose of making a
                                 reservation and in accordance with the terms of
-                                the
-                                <Link href="/" className="underline">
+                                the{' '}
+                                <Link href="/" className="underline text-[#4C2B08] font-bold">
                                     Privacy Notice
                                 </Link>
                                 .
@@ -213,7 +213,7 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                         <Btn
                             theme="accent"
                             size="lg"
-                            className="justify-center w-full col-span-2"
+                            className="justify-center w-full col-span-2 bg-[#4C2B08] hover:bg-[#AB7743] text-white border-none rounded-full py-4 font-black tracking-widest uppercase transition-colors"
                             onClick={() => handleFormSubmit()}
                         >
                             <span>Submit your reservation</span>
