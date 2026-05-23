@@ -90,28 +90,32 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
     };
 
     return (
-        <section className="pt-[60px] pb-12 md:pb-24 lg:pt-[120px] lg:pb-[160px] bg-[#D7BDA6] transition-all duration-500">
-            <div className="container mx-auto px-4 max-w-[1200px]">
+        <section className="pt-[108px] pb-10 overflow-hidden md:pb-20 lg:pt-[218px] lg:pb-[120px] bg-[#D7BDA6] relative z-10">
+            {/* Global style injector to force the entire layout wrapper and document body to match the Vanilla backdrop */}
+            <style dangerouslySetInnerHTML={{__html: `
+                body, html, main, #__next, .app-layout-wrapper {
+                    background-color: #D7BDA6 !important;
+                }
+            `}} />
+
+            <div className="container max-w-[1198px]">
                 <ArchWithStar />
-                
-                {/* Responsive Container: 
-                  Expands elegantly across screens so it never looks compressed or squeezed.
-                */}
-                <div className="relative max-w-[480px] sm:max-w-[600px] md:max-w-[720px] lg:max-w-[860px] mx-auto">
-                    <h1 className="text-3xl lg:text-5xl font-black font-Gloock uppercase text-center mb-12 lg:mb-16 text-[#4C2B08] tracking-tight">
+                <div className="relative px-4 max-w-[400px] mx-auto lg:max-w-[808px] xl:px-0">
+                    <h1 className="text-xl leading-none font-Gloock uppercase text-center mb-10 lg:text-5xl lg:leading-none lg:mb-14 text-[#4C2B08]">
                         {title}
                     </h1>
                     
+                    {/* Kept your original grid-cols-2 template layouts and gap matrices perfectly intact */}
                     <form
                         onSubmit={(e) => e.preventDefault()}
-                        className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-7 lg:gap-x-8 lg:gap-y-10"
+                        className="grid grid-cols-2 gap-x-[14px] gap-y-[22px] lg:gap-x-4 lg:gap-y-[30px]"
                     >
                         <FormText
                             value={form.name}
                             label="Name"
                             placeholder="Enter your full name or nickname..."
                             error={formErrors.name}
-                            className="col-span-1 sm:col-span-2"
+                            className="col-span-2"
                             onChange={(value) =>
                                 handleUpdateForm('name', value)
                             }
@@ -125,7 +129,6 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                             type="date"
                             label="Date"
                             placeholder="DD/MM/YYYY"
-                            className="col-span-1"
                         />
                         <FormText
                             error={formErrors.time}
@@ -136,7 +139,6 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                             type="time"
                             label="Time"
                             placeholder="Enter time"
-                            className="col-span-1"
                         />
                         <FormText
                             error={formErrors.guestsCount}
@@ -146,7 +148,6 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                             }
                             label="Number of guests"
                             placeholder="Number of guests"
-                            className="col-span-1"
                         />
                         <FormText
                             error={formErrors.email}
@@ -156,7 +157,6 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                             }
                             label="Email / Phone"
                             placeholder="Email or phone..."
-                            className="col-span-1"
                         />
                         <FormText
                             error={formErrors.notes}
@@ -167,10 +167,9 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                             type="textarea"
                             label="Notes"
                             placeholder="If you have special requirements..."
-                            className="col-span-1 sm:col-span-2"
+                            className="col-span-2"
                         />
-                        
-                        <label className="flex items-start col-span-1 sm:col-span-2 cursor-pointer mb-2">
+                        <label className="flex items-start col-span-2 cursor-pointer">
                             <input
                                 value={String(form.acceptTerms)}
                                 type="checkbox"
@@ -184,11 +183,11 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                             />
                             <div
                                 className={classNames(
-                                    'flex justify-center items-center flex-shrink-0 w-5 h-5 rounded-[4px] border mt-0.5 mr-3 transition-colors duration-300',
+                                    'flex justify-center items-center flex-shrink-0 w-4 h-4 rounded-[3px] border mt-0.5 mr-2 transition-colors duration-300 lg:mr-[14px]',
                                     {
                                         'border-appAccent bg-appAccent':
                                             form.acceptTerms,
-                                        'border-[#4C2B08]/40': !form.acceptTerms,
+                                        'border-[#A8A7A0]': !form.acceptTerms,
                                     },
                                 )}
                             >
@@ -201,13 +200,13 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                                         strokeWidth="3"
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
-                                        className="w-3.5 h-3.5 text-white"
+                                        className="w-3 h-3 text-white"
                                     >
                                         <polyline points="20 6 9 17 4 12"></polyline>
                                     </svg>
                                 )}
                             </div>
-                            <div className="text-xs sm:text-sm leading-relaxed text-[#4C2B08]/85 font-medium select-none">
+                            <div className="text-xs leading-[1.2] tracking-[-0.41px] text-[#4C2B08]/80 lg:text-base lg:leading-[1.2] font-medium">
                                 By submitting this form, you confirm you have
                                 read and understood how Cravenest processes your
                                 personal data for the purpose of making a
@@ -219,16 +218,14 @@ const ReservationForm: React.FC<Props> = ({ title }) => {
                                 .
                             </div>
                         </label>
-                        
-                        {/* Premium Full-Width Submit Button:
-                          Spans cleanly across both grid columns on larger screens and scales perfectly on mobile.
-                        */}
+
+                        {/* Solid, beautifully rendered Espresso capsule button spanning exactly col-span-2 */}
                         <button
                             type="button"
-                            className="flex items-center justify-center w-full col-span-1 sm:col-span-2 bg-[#4C2B08] hover:bg-[#AB7743] text-white rounded-full py-4.5 px-8 font-black tracking-wider sm:tracking-widest uppercase transition-all duration-300 shadow-lg cursor-pointer hover:scale-[1.01] active:scale-[0.99] text-xs sm:text-sm lg:text-base"
+                            className="justify-center w-full col-span-2 bg-[#4C2B08] hover:bg-[#AB7743] text-white rounded-full py-4.5 font-black tracking-widest uppercase transition-all duration-300 shadow-md cursor-pointer hover:scale-[1.01] active:scale-[0.99] text-xs sm:text-sm lg:text-base"
                             onClick={() => handleFormSubmit()}
                         >
-                            <span>Submit your reservation</span>
+                            Submit your reservation
                         </button>
                     </form>
                 </div>
