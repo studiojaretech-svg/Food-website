@@ -19,52 +19,99 @@ interface Props {
 
 SwiperCore.use([A11y, Navigation]);
 
+// Dynamic node type extractor to satisfy TypeScript compilation rules
+type BCMSNode = Props['description']['nodes'][number];
+
 const HomeTestimonials: React.FC<Props> = ({
     title,
     description,
     testimonials,
     bcmsConfig,
 }) => {
+    // Helper function to safely replace placeholder text "tastyyy" inside description nodes
+    const replaceTextInNodes = (nodes: BCMSNode[]): BCMSNode[] => {
+        if (!nodes) return [];
+        return nodes.map((node) => {
+            const newNode = { ...node } as BCMSNode;
+            if (newNode && 'value' in newNode && typeof newNode.value === 'string') {
+                (newNode as { value?: string }).value = newNode.value
+                    .replace(/welcome to tastyyy/gi, 'Welcome to Cravenest')
+                    .replace(/tastyyy/gi, 'Cravenest');
+            }
+            if (newNode && 'nodes' in newNode && newNode.nodes && Array.isArray(newNode.nodes)) {
+                (newNode as { nodes?: BCMSNode[] }).nodes = replaceTextInNodes(newNode.nodes as BCMSNode[]);
+            }
+            return newNode;
+        });
+    };
+
+    const processedDescriptionNodes = replaceTextInNodes(description.nodes as BCMSNode[]);
+
+    // Function to render the word "TESTIMONIALS" with the letter "I" styled in glowing Saffron Gold
+    const renderStyledTitle = (rawTitle: string) => {
+        const fallbackText = "TESTIMONIALS";
+        const targetWord = (rawTitle || fallbackText).toUpperCase();
+        
+        return (
+            <span className="inline-flex flex-wrap justify-center">
+                {targetWord.split('').map((char, idx) => {
+                    const isLetterI = char === 'I';
+                    return (
+                        <span 
+                            key={idx} 
+                            className={isLetterI ? 'text-[#FFB03A] font-black' : 'text-[#4C2B08]'}
+                        >
+                            {char}
+                        </span>
+                    );
+                })}
+            </span>
+        );
+    };
+
     return (
-        <section className="overflow-hidden pb-14 md:pb-20 lg:pb-[120px]">
-            <div className="container">
+        <section className="relative bg-[#D7BDA6] py-20 lg:py-32 overflow-hidden transition-colors duration-500">
+            {/* Subtle background light-diffuser effects */}
+            <div className="absolute top-[10%] left-[-15%] w-[45%] h-[45%] rounded-full bg-white/15 blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[10%] right-[-15%] w-[45%] h-[45%] rounded-full bg-[#4C2B08]/5 blur-[120px] pointer-events-none" />
+
+            <div className="container mx-auto px-4 relative z-10">
                 <div className="flex flex-col items-center">
-                    <div className="text-xs leading-none mb-2.5 lg:text-base lg:leading-none lg:mb-[14px]">
-                        [ 6 ]
+                    
+                    {/* Index Tag Styled in High-Contrast Espresso */}
+                    <div className="text-xs lg:text-sm font-black tracking-widest text-[#4C2B08] uppercase mb-4 px-3 py-1 bg-[#4C2B08]/5 rounded-full border border-[#4C2B08]/15">
+                        [ 5 ]
                     </div>
-                    <h2 className="text-lg leading-none uppercase font-Gloock mb-4 lg:text-5xl lg:leading-none lg:mb-6">
-                        {title}
+
+                    {/* Section Title: Customized word structure highlighting the letter 'I' in gold */}
+                    <h2 className="text-3xl lg:text-5xl font-black tracking-tight font-Gloock mb-4 lg:mb-6 uppercase leading-none">
+                        {renderStyledTitle(title)}
                     </h2>
+
+                    {/* Description Subheader in warm, highly-readable Espresso */}
                     <ContentManager
-                        items={description.nodes}
-                        className="text-sm leading-[1.3] tracking-[-0.41px] text-appGray-700 uppercase max-w-[745px] mx-auto mb-10 lg:text-base lg:leading-[1.3] lg:mb-[45px]"
+                        items={processedDescriptionNodes}
+                        className="text-sm lg:text-base leading-relaxed text-[#6D3914]/90 tracking-wide font-medium uppercase max-w-[745px] mx-auto mb-12 lg:mb-20 text-center"
                     />
-                    <div className="grid grid-cols-[auto,1fr,auto] gap-5 w-full lg:gap-24">
-                        <button className="homeTestimonials--swiperPrev flex translate-y-[60px]">
+
+                    {/* Slider Block */}
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-5 w-full items-center lg:gap-20 max-w-5xl mx-auto">
+                        
+                        {/* Prev button: Styled in Espresso with Saffron hover states */}
+                        <button className="homeTestimonials--swiperPrev w-10 h-10 lg:w-14 lg:h-14 rounded-full border border-[#4C2B08]/20 bg-[#4C2B08]/5 hover:bg-[#4C2B08] hover:text-[#FFFDF4] transition-all flex items-center justify-center cursor-pointer shadow-sm shrink-0 group">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
-                                className="w-4 h-4 flex-shrink-0 lg:w-12 lg:h-12"
+                                viewBox="0 0 48 48"
+                                className="w-5 h-5 lg:w-6 lg:h-6 text-[#4C2B08] group-hover:text-[#FFFDF4] transition-colors"
                             >
-                                <mask
-                                    id="aaa"
-                                    width="48"
-                                    height="48"
-                                    x="0"
-                                    y="0"
-                                    maskUnits="userSpaceOnUse"
-                                    style={{ maskType: 'alpha' }}
-                                >
-                                    <path fill="#D9D9D9" d="M48 0H0v48h48z" />
-                                </mask>
-                                <g mask="url(#aaa)">
-                                    <path
-                                        fill="currentColor"
-                                        d="m24 40 2.85-2.8L15.65 26H40v-4H15.65l11.2-11.2L24 8 8 24l16 16Z"
-                                    />
-                                </g>
+                                <path
+                                    fill="currentColor"
+                                    d="m24 40 2.85-2.8L15.65 26H40v-4H15.65l11.2-11.2L24 8 8 24l16 16Z"
+                                />
                             </svg>
                         </button>
+
                         <Swiper
                             slidesPerView={1}
                             watchOverflow
@@ -76,49 +123,49 @@ const HomeTestimonials: React.FC<Props> = ({
                             }}
                             className="w-full"
                         >
-                            {testimonials.map((testimonial, index) => (
-                                <SwiperSlide
-                                    key={index}
-                                    className="flex flex-col items-center justify-center text-center"
-                                >
-                                    <ContentManager
-                                        items={testimonial.quote.nodes}
-                                        className="text-sm leading-[1.4] font-Gloock text-appGray-700 mb-4 lg:text-[32px] lg:leading-[1.4] lg:mb-12"
-                                    />
-                                    <BCMSImage
-                                        media={testimonial.author_avatar_image}
-                                        clientConfig={bcmsConfig}
-                                        className="w-10 h-10 rounded-full overflow-hidden object-cover mb-3 mx-auto lg:w-16 lg:h-16 lg:mb-6"
-                                    />
-                                    <div className="text-xs leading-none tracking-[-0.41px] text-appGray-700 uppercase lg:text-xl lg:leading-none">
-                                        {testimonial.author_name}
-                                    </div>
-                                </SwiperSlide>
-                            ))}
+                            {testimonials.map((testimonial, index) => {
+                                const processedQuoteNodes = replaceTextInNodes((testimonial.quote.nodes || []) as BCMSNode[]);
+                                return (
+                                    <SwiperSlide
+                                        key={index}
+                                        className="flex flex-col items-center justify-center text-center"
+                                    >
+                                        {/* Main quote in massive, beautiful Gloock serif italic */}
+                                        <ContentManager
+                                            items={processedQuoteNodes}
+                                            className="text-lg md:text-xl lg:text-3xl leading-relaxed font-Gloock italic text-[#4C2B08] mb-6 lg:mb-12"
+                                        />
+                                        
+                                        {/* Author Image wrapper */}
+                                        <div className="relative w-12 h-12 lg:w-16 lg:h-16 rounded-full overflow-hidden object-cover mb-3 mx-auto shadow-md border-2 border-white/50">
+                                            <BCMSImage
+                                                media={testimonial.author_avatar_image}
+                                                clientConfig={bcmsConfig}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+
+                                        {/* Author metadata */}
+                                        <div className="text-xs lg:text-sm font-black tracking-widest text-[#6D3914]/85 uppercase font-Gloock leading-none">
+                                            {testimonial.author_name}
+                                        </div>
+                                    </SwiperSlide>
+                                );
+                            })}
                         </Swiper>
-                        <button className="homeTestimonials--swiperNext flex translate-y-[60px]">
+
+                        {/* Next button: Styled in Espresso with Saffron hover states */}
+                        <button className="homeTestimonials--swiperNext w-10 h-10 lg:w-14 lg:h-14 rounded-full border border-[#4C2B08]/20 bg-[#4C2B08]/5 hover:bg-[#4C2B08] hover:text-[#FFFDF4] transition-all flex items-center justify-center cursor-pointer shadow-sm shrink-0 group">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
-                                className="w-4 h-4 flex-shrink-0 lg:w-12 lg:h-12"
+                                viewBox="0 0 48 48"
+                                className="w-5 h-5 lg:w-6 lg:h-6 text-[#4C2B08] group-hover:text-[#FFFDF4] transition-colors"
                             >
-                                <mask
-                                    id="add"
-                                    width="48"
-                                    height="48"
-                                    x="0"
-                                    y="0"
-                                    maskUnits="userSpaceOnUse"
-                                    style={{ maskType: 'alpha' }}
-                                >
-                                    <path fill="#D9D9D9" d="M0 0h48v48H0z" />
-                                </mask>
-                                <g mask="url(#add)">
-                                    <path
-                                        fill="currentColor"
-                                        d="m24 40-2.85-2.8L32.35 26H8v-4h24.35l-11.2-11.2L24 8l16 16-16 16Z"
-                                    />
-                                </g>
+                                <path
+                                    fill="currentColor"
+                                    d="m24 40-2.85-2.8L32.35 26H8v-4h24.35l-11.2-11.2L24 8l16 16-16 16Z"
+                                />
                             </svg>
                         </button>
                     </div>
@@ -129,3 +176,4 @@ const HomeTestimonials: React.FC<Props> = ({
 };
 
 export default HomeTestimonials;
+
