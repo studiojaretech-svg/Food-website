@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import Btn from '../Btn';
 
 const Header: React.FC = () => {
-    // Fixed: Changed ref type from HTMLDivElement to HTMLUListElement to match the <ul> element below
+    // Correct ref type to HTMLUListElement to match the <ul> element below
     const navItemsDOM = useRef<HTMLUListElement | null>(null);
     const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
 
@@ -51,9 +51,9 @@ const Header: React.FC = () => {
     }, [showMobileMenu]);
 
     return (
-        <header className="relative z-50 bg-[#D7BDA6] py-3 shadow-[0_4px_20px_rgba(76,43,8,0.06)] border-b border-[#4C2B08]/5 mb-4 lg:mb-8 transition-colors duration-500">
+        <header className="relative z-50 bg-[#D7BDA6] py-4 lg:py-6 shadow-[0_4px_20px_rgba(76,43,8,0.06)] border-b border-[#4C2B08]/5 transition-colors duration-500">
             <div className="relative z-10 container mx-auto px-4">
-                <nav className="relative flex items-center justify-between pt-2">
+                <nav className="relative flex items-center justify-between">
                     {/* Premium Cravenest Custom Text Logo with Gold Saffron accent */}
                     <Link
                         href="/"
@@ -69,7 +69,7 @@ const Header: React.FC = () => {
                     <ul
                         ref={navItemsDOM}
                         className={classNames(
-                            'flex flex-col gap-5 max-md:absolute max-md:left-0 max-md:-bottom-[13px] max-md:translate-y-full max-md:w-full max-md:bg-[#D7BDA6] max-md:p-6 max-md:border-t max-md:border-[#4C2B08]/10 max-md:shadow-xl md:flex-row md:flex-1 md:justify-center lg:gap-8 z-50',
+                            'flex flex-col gap-5 max-md:absolute max-md:left-0 max-md:-bottom-[17px] max-md:translate-y-full max-md:w-full max-md:bg-[#D7BDA6] max-md:p-6 max-md:border-t max-md:border-[#4C2B08]/10 max-md:shadow-xl md:flex-row md:flex-1 md:justify-center lg:gap-8 z-50',
                             {
                                 'flex': showMobileMenu,
                                 'max-md:hidden': !showMobileMenu,
@@ -126,10 +126,6 @@ const Header: React.FC = () => {
                     </button>
                 </nav>
             </div>
-            {/* Backdrop cover for mobile menu */}
-            {showMobileMenu && (
-                <div className="fixed inset-0 top-[70px] w-screen h-screen bg-black/15 backdrop-blur-sm md:hidden z-40" />
-            )}
         </header>
     );
 };
