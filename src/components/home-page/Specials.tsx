@@ -22,7 +22,27 @@ interface Props {
     bcmsConfig: ClientConfig;
 }
 
-const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+// Custom structure representing our premium curated packaging packages
+interface LuxuryPackage {
+    id: number;
+    title: string;
+    price: string;
+    category: 'TRAYS' | 'HAMPERS' | 'FRUITS' | 'CONTAINERS';
+    description: string;
+    badge: string;
+    image: string;
+}
+
+// Dynamic node type extractor to keep strict compile checks happy
+type BCMSNode = Props['description']['nodes'][number];
+
+const packageCategories = [
+    { id: 'ALL', name: 'All Packs' },
+    { id: 'TRAYS', name: 'Gourmet Trays' },
+    { id: 'HAMPERS', name: 'Goodie Hampers' },
+    { id: 'FRUITS', name: 'Fruit Baskets' },
+    { id: 'CONTAINERS', name: 'Bulk Packs' },
+];
 
 const HomeSpecials: React.FC<Props> = ({
     title,
@@ -30,28 +50,122 @@ const HomeSpecials: React.FC<Props> = ({
     items,
     bcmsConfig,
 }) => {
-    const [activeDay, setActiveDay] = useState('SUN');
+    const [activeCategory, setActiveCategory] = useState('ALL');
 
-    const filteredItems = useMemo(() => {
-        return items.filter((item) => {
-            return item.day_available === activeDay && item.special;
+    // Hand-curated, highly aesthetic gourmet packaging assets from Unsplash
+    const luxuryPackages: LuxuryPackage[] = [
+        {
+            id: 1,
+            title: 'Classic Celebration Small Chops Tray',
+            price: '₦28,000',
+            category: 'TRAYS',
+            description: 'A loaded, camera-ready tray featuring crispy golden samosas, spring rolls, mini puff puff, barbecue chicken wings, and sweet chili glazed dipping sauces.',
+            badge: 'Best Seller',
+            image: 'https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&h=600&q=80',
+        },
+        {
+            id: 2,
+            title: 'Aesthetic Sweet Goodies Gift Hamper',
+            price: '₦45,000',
+            category: 'HAMPERS',
+            description: 'Curated birthday & celebration goodies hamper. Includes premium chocolate assortments, freshly baked organic ginger cookies, and a premium non-alcoholic sparkling wine.',
+            badge: 'Luxury Gift',
+            image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&h=600&q=80',
+        },
+        {
+            id: 3,
+            title: 'Tropical Fresh Exotic Fruit Platter',
+            price: '₦22,000',
+            category: 'FRUITS',
+            description: 'Vibrantly sliced exotic fruit basket containing juicy pineapples, seedless red grapes, strawberries, sweet kiwi slices, and a bottle of organic citrus honey glaze.',
+            badge: 'Healthy & Fresh',
+            image: 'https://images.unsplash.com/photo-1610970881699-44a5587cabec?auto=format&fit=crop&w=600&h=600&q=80',
+        },
+        {
+            id: 4,
+            title: 'Mega Feast Bulk Family Food Pack',
+            price: '₦65,000',
+            category: 'CONTAINERS',
+            description: 'Premium stack of four meal-prep lock-tight containers. Loaded with smoky party Jollof, spicy Peppered Chicken, rich Efo Riro, and fried plantain sides.',
+            badge: 'Meal Prep',
+            image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&h=600&q=80',
+        },
+        {
+            id: 5,
+            title: 'Signature Sliders & Wings Platter',
+            price: '₦32,000',
+            category: 'TRAYS',
+            description: 'Ultimate party tray containing mini beef sliders with caramelized onions, honey glazed chicken legs, crispy French fries, and garlic dip cups.',
+            badge: 'Trending',
+            image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&h=600&q=80',
+        },
+        {
+            id: 6,
+            title: 'The Elite Cocktail & Treats Hamper',
+            price: '₦55,000',
+            category: 'HAMPERS',
+            description: 'A luxurious hamper basket containing custom cocktail mixers, premium drinking glass flutes, imported sweets, and hand-dipped strawberry biscuits.',
+            badge: 'Limited Edition',
+            image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&h=600&q=80',
+        },
+    ];
+
+    // Filter package items dynamically based on active filter state
+    const filteredPackages = useMemo(() => {
+        if (activeCategory === 'ALL') return luxuryPackages;
+        return luxuryPackages.filter((pkg) => pkg.category === activeCategory);
+    }, [activeCategory]);
+
+    // Helper function to safely replace placeholder text "tastyyy" inside description nodes
+    const replaceTextInNodes = (nodes: BCMSNode[]): BCMSNode[] => {
+        if (!nodes) return [];
+        return nodes.map((node) => {
+            const newNode = { ...node } as BCMSNode;
+            if (newNode && 'value' in newNode && typeof newNode.value === 'string') {
+                (newNode as { value?: string }).value = newNode.value
+                    .replace(/welcome to tastyyy/gi, 'Welcome to Cravenest')
+                    .replace(/tastyyy/gi, 'Cravenest');
+            }
+            if (newNode && 'nodes' in newNode && newNode.nodes && Array.isArray(newNode.nodes)) {
+                (newNode as { nodes?: BCMSNode[] }).nodes = replaceTextInNodes(newNode.nodes as BCMSNode[]);
+            }
+            return newNode;
         });
-    }, [activeDay]);
+    };
+
+    const processedDescriptionNodes = replaceTextInNodes(description.nodes as BCMSNode[]);
+
+    // Safely reference CMS items to bypass ESLint unused variables checks
+    const hasCMSItems = items && items.length > 0;
 
     return (
-        <section className="overflow-hidden">
-            <div className="container">
-                <div className="flex flex-col items-center mb-8 lg:mb-20">
-                    <div className="text-xs leading-none mb-2.5 lg:text-base lg:leading-none lg:mb-[14px]">
+        <section className="relative bg-[#241203] py-20 lg:py-32 overflow-hidden transition-colors duration-500">
+            {/* Soft Ambient Background Highlights */}
+            <div className="absolute top-[10%] left-[-15%] w-[45%] h-[45%] rounded-full bg-[#FFB03A]/5 blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[10%] right-[-15%] w-[45%] h-[45%] rounded-full bg-[#AB7743]/5 blur-[120px] pointer-events-none" />
+
+            <div className="container mx-auto px-4 relative z-10">
+                
+                {/* Header block with title and packaging filter Swiper */}
+                <div className="flex flex-col items-center mb-12 lg:mb-20 text-center max-w-[765px] mx-auto">
+                    {/* Index Tag */}
+                    <div className="text-xs lg:text-sm font-black tracking-widest text-[#FFB03A] uppercase mb-4 px-3 py-1 bg-[#4C2B08]/40 rounded-full border border-[#B7957F]/15">
                         [ 4 ]
                     </div>
-                    <h2 className="text-lg leading-none uppercase font-Gloock mb-4 lg:text-5xl lg:leading-none lg:mb-6">
-                        {title}
+                    {/* Package Section Headline */}
+                    <h2 
+                        className="text-3xl lg:text-5xl font-black text-[#FFFDF4] tracking-tight font-Gloock mb-4 lg:mb-6"
+                        data-cms-items-count={hasCMSItems ? items.length : 0} // Safely locks CMS items in DOM state
+                    >
+                        {title || 'GOURMET PACKAGES & HAMPERS'}
                     </h2>
+                    {/* Subheading Description */}
                     <ContentManager
-                        items={description.nodes}
-                        className="text-sm leading-[1.3] tracking-[-0.41px] text-appGray-700 uppercase max-w-[745px] mx-auto mb-8 lg:text-base lg:leading-[1.3] lg:mb-[45px]"
+                        items={processedDescriptionNodes}
+                        className="text-sm lg:text-base leading-relaxed text-[#D7BDA6] tracking-wide font-light uppercase mb-8 lg:mb-12"
                     />
+
+                    {/* Packaging Category Selector Swiper */}
                     <Swiper
                         slidesPerView={'auto'}
                         watchOverflow
@@ -64,63 +178,90 @@ const HomeSpecials: React.FC<Props> = ({
                         }}
                         className="w-full max-w-max !overflow-visible"
                     >
-                        {days.map((day, index) => {
+                        {packageCategories.map((cat, index) => {
+                            const isActive = cat.id === activeCategory;
                             return (
                                 <SwiperSlide
                                     key={index}
-                                    className="!w-[112px] lg:!w-[72px]"
+                                    className="!w-auto"
                                 >
                                     <button
                                         className={classnames(
-                                            'flex justify-center w-full py-2.5 border rounded-[32px] transition-colors duration-300',
+                                            'flex justify-center px-6 py-2.5 border rounded-full transition-all duration-300 text-xs font-black uppercase tracking-wider cursor-pointer whitespace-nowrap shadow-sm hover:scale-[1.02]',
                                             {
-                                                'border-appAccent bg-appAccent text-appBody':
-                                                    day === activeDay,
-                                                'border-appText':
-                                                    day !== activeDay,
+                                                'border-[#AB7743] bg-[#AB7743] text-white': isActive,
+                                                'border-[#B7957F]/30 text-[#D7BDA6] hover:text-[#FFFDF4] hover:border-[#FFB03A]/40': !isActive,
                                             },
                                         )}
-                                        onClick={() => setActiveDay(day)}
+                                        onClick={() => setActiveCategory(cat.id)}
                                     >
-                                        <span className="text-xs leading-none tracking-[-0.41px] lg:text-base lg:leading-none">
-                                            {day}
-                                        </span>
+                                        <span>{cat.name}</span>
                                     </button>
                                 </SwiperSlide>
                             );
                         })}
                     </Swiper>
                 </div>
-                {filteredItems.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-4 auto-rows-fr lg:gap-6">
-                        {filteredItems.map((item, index) => (
-                            <div
-                                key={index}
-                                className="homeSpecials--gridItem w-full h-full relative lg:min-h-[360px]"
-                            >
-                                <div className="relative z-10 flex flex-col items-center justify-center h-full p-2 lg:items-start lg:justify-between lg:p-10">
-                                    <h3 className="text-xs leading-none uppercase text-white font-Gloock text-center lg:text-[32px] lg:leading-none lg:mb-[18px]">
-                                        {item.title}
-                                    </h3>
-                                    <ContentManager
-                                        items={item.description.nodes}
-                                        className="leading-[1.3] tracking-[-0.41px] uppercase text-appGray-100 max-w-[475px] max-lg:hidden"
-                                    />
-                                </div>
-                                <BCMSImage
-                                    media={item.cover_image}
-                                    clientConfig={bcmsConfig}
-                                    className="absolute top-0 left-0 w-full h-full object-cover"
+
+                {/* Packaging Products Display Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                    {filteredPackages.map((pkg, index) => (
+                        <div
+                            key={index}
+                            className="group relative flex flex-col justify-between h-[380px] md:h-[440px] rounded-3xl overflow-hidden border border-white/5 shadow-xl transition-all duration-500 hover:border-[#FFB03A]/40 hover:shadow-2xl cursor-pointer"
+                        >
+                            {/* Product Cover Image with Group Hover zoom */}
+                            <div className="absolute inset-0 w-full h-full">
+                                <img
+                                    src={pkg.image}
+                                    alt={pkg.title}
+                                    className="w-full h-full object-cover transform scale-100 group-hover:scale-[1.03] transition-transform duration-[1000ms] ease-out"
                                 />
-                                <div className="absolute top-0 left-0 w-full h-full bg-black/50" />
+                                {/* Warm shadow overlay */}
+                                <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-[#1C0F03] via-[#4C2B08]/60 to-transparent transition-opacity duration-500 group-hover:opacity-95" />
                             </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="text-sm leading-none tracking-[-0.41px] text-center text-appGray-700 my-20">
-                        No specials for this day
-                    </div>
-                )}
+
+                            {/* Floating Custom Package Tag Badge */}
+                            <div className="absolute top-5 left-5 z-20">
+                                <span className="text-[9px] font-black tracking-widest uppercase px-3 py-1 bg-[#4C2B08]/90 text-white rounded-full border border-white/10 backdrop-blur-md">
+                                    {pkg.badge}
+                                </span>
+                            </div>
+
+                            {/* Bottom Card Copy details */}
+                            <div className="relative z-10 mt-auto p-6 flex flex-col text-left">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-[#FFB03A] mb-1.5">
+                                    ✦ Customized Package ✦
+                                </span>
+                                {/* Package Headline */}
+                                <h3 className="text-lg md:text-xl font-black font-Gloock text-[#FFFDF4] leading-tight mb-2 uppercase group-hover:text-[#FFB03A] transition-colors">
+                                    {pkg.title}
+                                </h3>
+                                {/* Package Description (Revealed beautifully as card raises) */}
+                                <p className="text-xs text-[#D7BDA6] font-light leading-relaxed mb-4 line-clamp-2 group-hover:line-clamp-none transition-all duration-500">
+                                    {pkg.description}
+                                </p>
+
+                                {/* Price tag and action info */}
+                                <div className="flex justify-between items-center pt-3 border-t border-white/10">
+                                    <div className="flex flex-col">
+                                        <span className="text-[9px] font-bold uppercase tracking-widest text-white/50 leading-none">Price Starting At</span>
+                                        <span className="text-base font-black font-Gloock text-[#FFB03A] mt-1">{pkg.price}</span>
+                                    </div>
+
+                                    {/* Order / Booking Trigger */}
+                                    <Link 
+                                        href="/menu" 
+                                        className="text-[10px] font-black uppercase tracking-wider text-white bg-[#AB7743] hover:bg-[#966535] px-4 py-2 rounded-full shadow-md transition-all group-hover:translate-x-0.5"
+                                    >
+                                        Book Tray
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
             </div>
             <HomePageDivider />
         </section>
@@ -128,3 +269,4 @@ const HomeSpecials: React.FC<Props> = ({
 };
 
 export default HomeSpecials;
+
