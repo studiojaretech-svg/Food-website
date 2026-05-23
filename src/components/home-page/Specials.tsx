@@ -167,7 +167,7 @@ const HomeSpecials: React.FC<Props> = ({
                         {title ? 'Celebrating a special moment? Let us style your perfect food trays & luxury hampers!' : 'Celebrating a special moment? Let us style your perfect food trays & luxury hampers!'}
                     </h2>
 
-                    {/* Subheading Description */}
+                    {/* Subheading Description - Cleaned up to pass Next.js HTML entity validations */}
                     {processedDescriptionNodes.length > 0 ? (
                         <ContentManager
                             items={processedDescriptionNodes}
@@ -175,7 +175,7 @@ const HomeSpecials: React.FC<Props> = ({
                         />
                     ) : (
                         <p className="text-sm lg:text-base leading-relaxed text-[#D7BDA6] tracking-wide font-light uppercase mb-8 lg:mb-12 max-w-[760px]">
-                            Why serve ordinary meals when you can make a statement? Whether you're hosting an intimate party, gifting a loved one, or setting up a family feast, our camera-ready food trays and luxury gift baskets are hand-styled to steal the show.
+                            {"Why serve ordinary meals when you can make a statement? Whether you're hosting an intimate party, gifting a loved one, or setting up a family feast, our camera-ready food trays and luxury gift baskets are hand-styled to steal the show."}
                         </p>
                     )}
 
