@@ -9,28 +9,42 @@ interface Props {
 const HomeDivider: React.FC<Props> = ({ arc, theme = 'light' }) => {
     const isDark = theme === 'dark';
 
-    // Dynamic color tokens mapping
-    const lineBg = isDark ? 'bg-white/20' : 'bg-[#D9D9D9]';
-    const starStyle = isDark ? { color: '#FFB03A' } : undefined;
-    const starClass = isDark 
-        ? 'relative z-10 w-6 h-6 lg:w-8 lg:h-8 text-[#FFB03A] drop-shadow-[0_0_8px_rgba(255,176,58,0.45)]' 
-        : 'relative z-10 w-6 h-6 lg:w-8 lg:h-8';
-
     return (
-        <div className="relative flex flex-col items-center justify-center max-w-max mx-auto my-6 lg:my-20">
+        <div className={`relative flex flex-col items-center justify-center max-w-max mx-auto my-6 lg:my-20 ${isDark ? 'dark-divider' : 'light-divider'}`}>
+            {/* Scoped CSS Injector to forcefully override hardcoded SVG path colors in the DOM */}
+            <style dangerouslySetInnerHTML={{__html: `
+                .dark-divider .star-icon-color path,
+                .dark-divider .star-icon-color polygon,
+                .dark-divider .star-icon-color circle,
+                .dark-divider .star-icon-color rect {
+                    fill: #FFB03A !important;
+                    stroke: none !important;
+                }
+                .light-divider .star-icon-color path,
+                .light-divider .star-icon-color polygon,
+                .light-divider .star-icon-color circle,
+                .light-divider .star-icon-color rect {
+                    fill: #D9D9D9 !important;
+                    stroke: none !important;
+                }
+            `}} />
+
             {/* Top vertical divider line segment */}
-            <div className={`w-px h-[50px] ${lineBg} lg:h-24 transition-colors duration-300`} />
+            <div className={`w-px h-[50px] lg:h-24 transition-colors duration-300 ${
+                isDark ? 'bg-[#FFB03A]' : 'bg-[#D9D9D9]'
+            }`} />
             
-            {/* Central StarIcon with dynamic saffron gold state */}
-            <StarIcon 
-                className={`${starClass} transition-all duration-300`} 
-                style={starStyle}
-            />
+            {/* Central StarIcon with color-overriding class and ambient drop shadow */}
+            <StarIcon className={`relative z-10 w-6 h-6 lg:w-8 lg:h-8 star-icon-color transition-all duration-300 ${
+                isDark ? 'drop-shadow-[0_0_8px_rgba(255,176,58,0.7)]' : ''
+            }`} />
             
             {/* Bottom vertical divider line segment */}
-            <div className={`w-px h-[50px] ${lineBg} lg:h-24 transition-colors duration-300`} />
+            <div className={`w-px h-[50px] lg:h-24 transition-colors duration-300 ${
+                isDark ? 'bg-[#FFB03A]' : 'bg-[#D9D9D9]'
+            }`} />
             
-            {/* Original beautiful background arc modified dynamically for dark sections */}
+            {/* Original background arc geometry styled dynamically */}
             {arc && (
                 <svg
                     viewBox="0 0 1299 1222"
@@ -56,7 +70,7 @@ const HomeDivider: React.FC<Props> = ({ arc, theme = 'light' }) => {
                             {/* Linear gradients update dynamically to match the section theme */}
                             <stop 
                                 stopColor={isDark ? "#FFB03A" : "#C2C0B8"} 
-                                stopOpacity={isDark ? "0.25" : "1"} 
+                                stopOpacity={isDark ? "0.3" : "1"} 
                             />
                             <stop
                                 offset="0.273792"
