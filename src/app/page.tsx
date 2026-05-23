@@ -70,44 +70,54 @@ const HomePage: React.FC = async () => {
                 bcmsConfig={bcmsPublic.getConfig()}
             />
 
-            {/* 2. Brand Services (Inserted immediately after Hero as requested) */}
+            {/* 2. Brand Services */}
             <HomeServices />
 
-            {/* 3. Menus, Seasons, & Specials */}
+            {/* 3. Menus Categories (Vanilla background) */}
             <HomeMenu
                 title={homePageMeta.menu_title}
                 description={homePageMeta.menu_description}
                 meals={homePageMeta.menu_meals}
                 bcmsConfig={bcmsPublic.getConfig()}
             />
+
+            {/* 4. Customer Favourites Delicacies (Mocca/Espresso background) */}
             <HomeSeasons
                 title={homePageMeta.seasons_title}
                 description={homePageMeta.seasons_description}
                 seasons={homePageMeta.seasons}
                 bcmsConfig={bcmsPublic.getConfig()}
             />
+
+            {/* 5. Ambience Architectural Spread (Almond background) */}
             <HomeAmbience
                 title={homePageMeta.ambience_title}
                 description={homePageMeta.ambience_description}
                 items={homePageMeta.ambience_items}
                 bcmsConfig={bcmsPublic.getConfig()}
             />
+
+            {/* 6. Specials & Hampers Packages (Coffee background) */}
             <HomeSpecials
                 title={homePageMeta.specials_title}
                 description={homePageMeta.specials_description}
                 items={foodItems.map((e) => e.meta.en as FoodItemEntryMetaItem)}
                 bcmsConfig={bcmsPublic.getConfig()}
             />
-            <HomeEvents
-                title={homePageMeta.events_title}
-                description={homePageMeta.events_description}
-                events={homePageMeta.events}
-                bcmsConfig={bcmsPublic.getConfig()}
-            />
+
+            {/* 7. Home Testimonials (Vanilla Background - Swapped order to render before Promo) */}
             <HomeTestimonials
                 title={homePageMeta.testimonials_title}
                 description={homePageMeta.testimonials_description}
                 testimonials={homePageMeta.testimonials}
+                bcmsConfig={bcmsPublic.getConfig()}
+            />
+
+            {/* 8. Sizzling Food Promo Section (Formerly Events - Placed as final showcase) */}
+            <HomeEvents
+                title={homePageMeta.events_title}
+                description={homePageMeta.events_description}
+                events={homePageMeta.events}
                 bcmsConfig={bcmsPublic.getConfig()}
             />
         </div>
