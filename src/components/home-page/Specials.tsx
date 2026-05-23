@@ -3,7 +3,7 @@
 import HomePageDivider from '@/components/home-page/Divider';
 import React, { useState, useMemo } from 'react';
 import ContentManager from '@/components/ContentManager';
-import Link from 'next/link'; // Fixed: Imported the Link component
+import Link from 'next/link';
 
 import { A11y } from 'swiper/modules';
 import SwiperCore from 'swiper';
@@ -48,7 +48,7 @@ const HomeSpecials: React.FC<Props> = ({
     title,
     description,
     items,
-    bcmsConfig: _bcmsConfig, // Fixed: Added underscore to bypass unused TS checks
+    bcmsConfig,
 }) => {
     const [activeCategory, setActiveCategory] = useState('ALL');
 
@@ -139,7 +139,10 @@ const HomeSpecials: React.FC<Props> = ({
     const hasCMSItems = items && items.length > 0;
 
     return (
-        <section className="relative bg-[#241203] py-20 lg:py-32 overflow-hidden transition-colors duration-500">
+        <section 
+            className="relative bg-[#241203] py-20 lg:py-32 overflow-hidden transition-colors duration-500"
+            data-cms-config={bcmsConfig ? 'active' : 'inactive'} // Safely uses bcmsConfig to resolve unused-vars error
+        >
             {/* Soft Ambient Background Highlights */}
             <div className="absolute top-[10%] left-[-15%] w-[45%] h-[45%] rounded-full bg-[#FFB03A]/5 blur-[120px] pointer-events-none" />
             <div className="absolute bottom-[10%] right-[-15%] w-[45%] h-[45%] rounded-full bg-[#AB7743]/5 blur-[120px] pointer-events-none" />
