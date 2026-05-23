@@ -3,7 +3,6 @@
 import HomePageDivider from '@/components/home-page/Divider';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import ContentManager from '@/components/ContentManager';
-import Link from 'next/link';
 
 import { A11y } from 'swiper/modules';
 import SwiperCore from 'swiper';
@@ -165,9 +164,9 @@ const HomeSpecials: React.FC<Props> = ({
     // Safely reference CMS items to bypass ESLint unused variables checks
     const hasCMSItems = items && items.length > 0;
 
-    // Highlights EXACTLY the word "special" to be Saffron Gold
-    const renderTaglineWithGold = () => {
-        const rawTagline = "Celebrating a special moment? Let us style your perfect food trays & luxury hampers!";
+    // Highlights EXACTLY the word "special" to be Saffron Gold inside the tagline
+    const renderTaglineWithGold = (textToRender: string) => {
+        const rawTagline = textToRender || "Celebrating a special moment? Let us style your perfect food trays & luxury hampers!";
         return (
             <span>
                 {rawTagline.split(' ').map((word, idx) => {
@@ -236,7 +235,7 @@ const HomeSpecials: React.FC<Props> = ({
                         className="text-2xl md:text-3xl lg:text-5xl font-black text-[#FFFDF4] tracking-tight font-Gloock mb-6 uppercase leading-tight md:leading-[1.1]"
                         data-cms-items-count={hasCMSItems ? items.length : 0} // Safely locks CMS items in DOM state
                     >
-                        {renderTaglineWithGold()}
+                        {renderTaglineWithGold(title)}
                     </h2>
 
                     {/* Subheading Description - Cleaned up to pass Next.js HTML entity validations */}
@@ -341,6 +340,7 @@ const HomeSpecials: React.FC<Props> = ({
 
                                         {/* Dynamic Add Tray CTA Trigger connected to global Cart Context */}
                                         <button
+                                            type="button"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 togglePackageInCart(pkg);
