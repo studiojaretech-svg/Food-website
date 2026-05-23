@@ -23,7 +23,14 @@ const AboutHero: React.FC<Props> = ({
     bcmsConfig,
 }) => {
     return (
-        <section className="pt-[108px] pb-10 overflow-hidden md:pb-14 lg:pt-[218px]">
+        <section className="pt-[108px] pb-10 overflow-hidden md:pb-14 lg:pt-[218px] bg-[#D7BDA6]">
+            {/* Global style injector to force the entire layout wrapper and document body to match the Vanilla backdrop */}
+            <style dangerouslySetInnerHTML={{__html: `
+                body, html, main, #__next, .app-layout-wrapper {
+                    background-color: #D7BDA6 !important;
+                }
+            `}} />
+
             <div className="container max-w-[1198px]">
                 <ArchWithStar />
                 <div className="relative px-4 max-w-[400px] mx-auto lg:max-w-[962px] xl:px-0">
@@ -55,3 +62,4 @@ const AboutHero: React.FC<Props> = ({
 };
 
 export default AboutHero;
+
