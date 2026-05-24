@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import Link from 'next/link';
 import classnames from 'classnames';
 import { useCart } from '@/context/CartContext';
 import { A11y } from 'swiper/modules';
@@ -11,7 +10,6 @@ import 'swiper/css';
 
 SwiperCore.use([A11y]);
 
-// Core types for food card listings and specials packages
 interface FoodCard {
     id: number;
     name: string;
@@ -426,4 +424,6 @@ const OrderPage: React.FC = () => {
                                             const isBtn = (e.target as HTMLElement).closest('button');
                                             if (isBtn) return;
                                             setActiveCardId(food.id);
-                   
+                                        }}
+                                        onTouchEnd={(e) => {
+    
