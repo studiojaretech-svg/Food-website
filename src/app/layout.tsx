@@ -12,10 +12,10 @@ const gloock = Gloock({
     variable: '--font-gloock',
 });
 
-const metaTitle = 'Cravenest'; // Rebranded from 'Tastyyy'
+const metaTitle = 'Cravenest'; // Rebranded
 const metaDescription =
     'Indulge in Cravenest, offering premium gourmet food trays, bulk party packs, and bespoke luxury hampers hand-styled and delivered fresh in Lagos, Nigeria.';
-const metaImage = '/thumbnail.jpg';
+const metaImage = '/thumbnail.png';
 
 export const metadata: Metadata = {
     metadataBase: new URL('https://restaurant-starter.thebcms.com'),
