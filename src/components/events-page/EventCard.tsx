@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import ContentManager from '@/components/ContentManager';
 import Link from 'next/link';
 import classnames from 'classnames';
 import { useCart } from '@/context/CartContext';
 import { A11y } from 'swiper/modules';
 import SwiperCore from 'swiper';
 import { SwiperSlide, Swiper } from 'swiper/react';
+import 'swiper/css';
 
 SwiperCore.use([A11y]);
 
-// Core structures for popular foods and luxury packages
+// Core types for food card listings and specials packages
 interface FoodCard {
     id: number;
     name: string;
@@ -51,12 +51,12 @@ const OrderPage: React.FC = () => {
     const [selectedSeasonCategory, setSelectedSeasonCategory] = useState('Trending');
     const [activePackageCategory, setActivePackageCategory] = useState('ALL');
     
-    // Card Active states
+    // Card Active states for ingredients popup
     const [activeCardId, setActiveCardId] = useState<number | null>(null);
     const [isVisible, setIsVisible] = useState(false);
     const pageRef = useRef<HTMLDivElement>(null);
 
-    // Scroll Entrance Observer
+    // Setup Scroll Entrance Intersection Observer
     useEffect(() => {
         const currentRef = pageRef.current;
         const observer = new IntersectionObserver(
@@ -81,6 +81,7 @@ const OrderPage: React.FC = () => {
 
     const seasonCategories = ['Trending', 'Traditional Rice', 'Spiced Grills', 'Pastries'];
 
+    // High-fidelity curated gourmet dishes
     const popularFoods: FoodCard[] = [
         {
             id: 1,
@@ -110,7 +111,7 @@ const OrderPage: React.FC = () => {
             portion: '6 pcs Portion',
             badge: 'Popular',
             image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=400&h=400&q=80',
-            ingredients: 'Light yeasted doughnut doughnut dough, rich sweet sugar glaze, premium organic vanilla bean finish.',
+            ingredients: 'Light yeasted doughnut dough, rich sweet sugar glaze, premium organic vanilla bean finish.',
         },
         {
             id: 4,
@@ -219,7 +220,7 @@ const OrderPage: React.FC = () => {
         },
     ], []);
 
-    // Filtered lists based on category triggers
+    // Filtered lists based on tab and nested categories
     const filteredFoods = selectedSeasonCategory === 'Trending' 
         ? popularFoods.filter(food => food.id === 1 || food.id === 2 || food.id === 3 || food.id === 8)
         : popularFoods.filter(food => food.category === selectedSeasonCategory);
@@ -229,7 +230,7 @@ const OrderPage: React.FC = () => {
         return luxuryPackages.filter((pkg) => pkg.category === activePackageCategory);
     }, [activePackageCategory, luxuryPackages]);
 
-    // Cart Action Triggers
+    // Cart Handlers
     const toggleSeasonFoodCart = (food: FoodCard) => {
         const cartId = `fav_${food.id}`;
         const isItemAdded = cart.some(item => item.id === cartId);
@@ -311,6 +312,13 @@ const OrderPage: React.FC = () => {
 
     return (
         <section ref={pageRef} className="relative min-h-screen bg-[#D7BDA6] py-16 lg:py-24 overflow-hidden">
+            {/* Global style injector to force the entire layout wrapper and document body to match the Vanilla backdrop */}
+            <style dangerouslySetInnerHTML={{__html: `
+                body, html, main, #__next, .app-layout-wrapper {
+                    background-color: #D7BDA6 !important;
+                }
+            `}} />
+
             {/* Ambient gold glow in the background */}
             <div className="absolute top-[20%] left-[-10%] w-[40%] h-[40%] rounded-full bg-white/20 blur-[130px] pointer-events-none" />
             <div className="absolute bottom-[20%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#4C2B08]/5 blur-[130px] pointer-events-none" />
@@ -372,7 +380,7 @@ const OrderPage: React.FC = () => {
                                 <span className="text-[10px] uppercase tracking-widest font-black text-[#4C2B08]/60">
                                     Filter by category:
                                 </span>
-                                <div className="flex gap-3 overflow-x-auto max-sm:w-full scrollbar-none pb-2">
+                                <div className="flex gap-2 overflow-x-auto max-sm:w-full scrollbar-none pb-2">
                                     {seasonCategories.map((cat) => (
                                         <button
                                             key={cat}
@@ -381,7 +389,7 @@ const OrderPage: React.FC = () => {
                                                 'px-4 py-2 text-xs font-black uppercase tracking-wider rounded-full border transition-all cursor-pointer whitespace-nowrap',
                                                 {
                                                     'border-[#4C2B08] bg-[#4C2B08] text-white': selectedSeasonCategory === cat,
-                                                    'border-[#4C2B08]/20 text-[#4C2B08]/70 hover:text-[#4C2B08]': selectedSeasonCategory !== cat
+                                                    'border-[#4C2B08]/20 text-[#4C2B08]/70 hover:text-[#4C2B08] hover:border-[#4C2B08]': selectedSeasonCategory !== cat
                                                 }
                                             )}
                                         >
@@ -417,11 +425,4 @@ const OrderPage: React.FC = () => {
                                         onTouchStart={(e) => {
                                             const isBtn = (e.target as HTMLElement).closest('button');
                                             if (isBtn) return;
-                                            setActiveCardId(food.id);
-                                        }}
-                                        onTouchEnd={(e) => {
-                                            const isBtn = (e.target as HTMLElement).closest('button');
-                                            if (isBtn) return;
-                                            setActiveCardId(null);
-                                        }}
-                
+                                            setActiveCardId(
