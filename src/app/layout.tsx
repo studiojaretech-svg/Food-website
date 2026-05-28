@@ -16,37 +16,29 @@ const metaTitle = 'Cravenest - Premium Gourmet Food Trays & Luxury Hampers';
 const metaDescription =
     'Indulge in Cravenest, offering premium gourmet food trays, bulk party packs, and bespoke luxury hampers hand-styled and delivered fresh in Lagos, Nigeria.';
 
-// 1. DYNAMICALLY RESOLVE VERCEL ENVIRONMENT URL
-// This automatically finds your exact Vercel subdomain (e.g., your-project.vercel.app)
-const getDeploymentUrl = () => {
-    if (process.env.NEXT_PUBLIC_VERCEL_URL) {
-        return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
-    }
-    if (process.env.VERCEL_URL) {
-        return `https://${process.env.VERCEL_URL}`;
-    }
-    return 'http://localhost:3000'; // Local development fallback
-};
-
-const deploymentUrl = getDeploymentUrl();
-
-// 2. CONSTRUCT ABSOLUTE IMAGE URL FOR OG CRAWLERS
-const metaImage = `${deploymentUrl}/thumbnail.png`;
-
 export const metadata: Metadata = {
-    metadataBase: new URL(deploymentUrl),
+    // Hardcoded production Vercel base to guarantee absolute URLs for crawlers
+    metadataBase: new URL('https://cravenest.vercel.app'),
     alternates: {
         canonical: '/',
     },
     title: metaTitle,
     description: metaDescription,
+    
+    // Explicit tab and mobile icons setup
+    icons: {
+        icon: '/favicon.ico',
+        shortcut: '/favicon.ico',
+        apple: '/apple-icon.png',
+    },
+
     openGraph: {
         title: metaTitle,
         description: metaDescription,
         type: 'website',
         images: [
             {
-                url: metaImage, // Direct absolute URL
+                url: '/thumbnail.png', // Automatically resolved to https://cravenest.vercel.app/thumbnail.png
                 width: 1200,
                 height: 630,
                 alt: 'Cravenest Premium Platter Showcase',
@@ -58,7 +50,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: metaTitle,
         description: metaDescription,
-        images: [metaImage], // Direct absolute URL
+        images: ['/thumbnail.png'],
         site: '@cravenest',
         creator: '@cravenest',
     },
@@ -83,4 +75,3 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
 };
 
 export default RootLayout;
-
