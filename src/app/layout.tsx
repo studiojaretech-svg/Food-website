@@ -17,7 +17,7 @@ const metaDescription =
     'Indulge in Cravenest, offering premium gourmet food trays, bulk party packs, and bespoke luxury hampers hand-styled and delivered fresh in Lagos, Nigeria.';
 
 export const metadata: Metadata = {
-    // Hardcoded production Vercel base to guarantee absolute URLs for crawlers
+    // metadataBase is required so Next.js can generate absolute URLs for your files
     metadataBase: new URL('https://cravenest.vercel.app'),
     alternates: {
         canonical: '/',
@@ -25,32 +25,18 @@ export const metadata: Metadata = {
     title: metaTitle,
     description: metaDescription,
     
-    // Explicit tab and mobile icons setup
-    icons: {
-        icon: '/favicon.ico',
-        shortcut: '/favicon.ico',
-        apple: '/apple-icon.png',
-    },
-
+    // Manual image & icon arrays removed to allow Next.js's automatic 
+    // opengraph-image.png & icon.png files to take absolute priority!
     openGraph: {
         title: metaTitle,
         description: metaDescription,
         type: 'website',
-        images: [
-            {
-                url: '/thumbnail.png', // Automatically resolved to https://cravenest.vercel.app/thumbnail.png
-                width: 1200,
-                height: 630,
-                alt: 'Cravenest Premium Platter Showcase',
-            }
-        ],
         siteName: 'Cravenest',
     },
     twitter: {
         card: 'summary_large_image',
         title: metaTitle,
         description: metaDescription,
-        images: ['/thumbnail.png'],
         site: '@cravenest',
         creator: '@cravenest',
     },
@@ -75,3 +61,4 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
 };
 
 export default RootLayout;
+
